@@ -1,0 +1,23 @@
+# Comparación: mismo ticket con y sin harness
+
+**Ticket:** FLOW-1 «Implementar login en el frontend» (texto del README). **Modelo:** Opus 5.5 en las dos copias. **Alcance:** solo plan, sin aplicar.
+**Harness montado:** piezas 1–8 (`CLAUDE.md` con `/init`, MCP `atlassian`, `/priority-ticket`, `/commit`, `adversarial-reviewer`, hook Prettier, reglas de proceso, `AGENTS.md`), commit `e507ff9`.
+
+| | Con harness (`/priority-ticket`) | Sin harness (instrucción a mano) |
+|---|---|---|
+| **1. Archivos que propone tocar** | 15 a mano (8 nuevos + 7 modificados) + 7 generados por shadcn + borra `App.css` y assets | 16 a mano (9 nuevos + 7 modificados) + 7 generados por shadcn + borra `App.css` y `hero.png` |
+| **2. Convenciones respetadas** | ✅ backend sin tocar · ✅ contrato de la API (`passwordConfirmation`, `fullName` nullable, 8–32, 400/422/401) · ✅ llamada directa a `:3333` (CORS abierto, como dice `CLAUDE.md`) · ✅ rama `feat/FLOW-1-login` · ✅ cierre `/commit` → PR → revisor sin corregir · ❌ no mostró el resumen del ticket (clave, prioridad, enlace) que pide el paso 2 de la skill | No había ninguna escrita. Por su cuenta: ✅ backend sin tocar · ✅ el mismo contrato de la API, descubierto con un subagente Explore · usa un proxy de Vite en vez de llamar a `:3333` · sin rama ni cierre con PR · `baseUrl` en tsconfig (obsoleto en TS 6; el plan con harness lo evita a propósito) |
+| **3. Intervenciones** | 0 (solo `/priority-ticket`) | 1: no tenía acceso a Jira y pidió el ticket. Se lo pegué, añadiendo «prepara un plan, pero que no lo ejecutes» (prompt 19) |
+| **4. Qué arreglaría a mano** | Logout añadido fuera de los criterios (validarlo con producto) · nombres de archivo en PascalCase sin convención escrita · `CLAUDE.md` dice «el frontend no tiene formateador», y el harness instala Prettier | Logout también fuera de los criterios · quitar `baseUrl` · decidir proxy o URL por `.env` · añadir rama y PR |
+
+**Nota de método:** en la copia con harness, `/priority-ticket` se lanzó en la misma conversación en la que se montó el harness, con el backend ya leído en el contexto. La pelada empezó en una sesión limpia. Además, el subagente de la pelada leyó el `README.md`, que es el enunciado del ejercicio: supo que era «la copia sin harness», que solo se comparaban planes y que el ticket deja huecos a propósito (las dos copias tienen ese README).
+
+## Parte B
+
+1. **Hasta qué pieza llegué y cuál me costó más:**
+En los 45 min llegué a la pieza 5. La que más me costó fue la 2 (MCP de Atlassian): unos 15 min en algo que en otro proyecto monté en 2, porque el conector «claude.ai Atlassian» de mi cuenta (empresa) tapaba al atlassian del proyecto y no me dejaba autenticar la cuenta personal hasta desactivarlo. Alargué esos 15 min para cerrar las piezas 6–8. He dedicado menos tiempo del previsto a revisar más a fondo los archivos generados, para tratar de llegar a poder ejecutar el ejercicio con las 2 instancias.
+2. **Primera diferencia que vi y dónde estaba mirando:**
+La primera diferencia la vi en la primera respuesta de la copia sin harness, en el chat, sin abrir ningún archivo. Con el mismo encargo, la copia con harness trajo FLOW-1 de Jira y entró directa en plan mode. La copia sin harness contestó que no tenía acceso a Jira y no entró en plan mode hasta que le pegué el ticket y le indiqué que no lo ejecutara. La diferencia no estuvo en cómo resolvía la tarea, sino en que sin harness ni siquiera podía llegar a la fuente del encargo. Luego, ya con los dos planes delante, vi la primera diferencia de contenido. La copia con harness llama directamente a localhost:3333, como dice CLAUDE.md («CORS abierto, el frontend puede llamar directamente»). La pelada monta un proxy de Vite. Para verlo tuve que comparar los dos planes, en concreto el apartado de configuración.
+3. **Algo escrito en el harness que el agente no cumplió:**
+La skill /priority-ticket pedía expresamente, en su paso 2, mostrar antes del plan un resumen breve con clave, título, prioridad, enlace y los criterios de aceptación en lista. El agente leyó FLOW-1 y entró directo en plan mode, sin ese resumen. En el plan los criterios sí aparecen, mapeados a los cambios, pero la prioridad y el enlace no están en ningún sitio. Los pasos que se apoyaban en herramientas (la búsqueda JQL, getJiraIssue, EnterPlanMode) se cumplieron todos. El que no se cayó fue el único que solo era una instrucción de texto, sin herramienta detrás. Escribirlo en la skill subió la probabilidad, pero no lo garantizó.
+Además, CLAUDE.md sigue diciendo «el frontend no tiene formateador» después de que el propio agente instalara Prettier en la pieza 6: el harness quedó contradiciéndose a sí mismo y nadie lo actualizó.
