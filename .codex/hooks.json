@@ -1,0 +1,18 @@
+{
+  "description": "FlowSync: lint y build automáticos al cambiar el frontend.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/NEUROMARKETING/flowsync-ai4devs-202610-ro/.codex/hooks/frontend-quality.cjs\"",
+            "timeout": 300,
+            "statusMessage": "Comprobando frontend FlowSync"
+          }
+        ]
+      }
+    ]
+  }
+}
