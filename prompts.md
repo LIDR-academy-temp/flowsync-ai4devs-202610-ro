@@ -11,7 +11,7 @@ distinto, y sin este archivo no se distinguen.
 
 ## Prompt 1
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
@@ -22,7 +22,7 @@ distinto, y sin este archivo no se distinguen.
 
 ## Prompt 2
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
@@ -33,7 +33,7 @@ run /mcp
 
 ## Prompt 3
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
@@ -44,7 +44,7 @@ run /mcp
 
 ## Prompt 4
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
@@ -55,7 +55,7 @@ Lista los elementos del proyecto FLOW en mi Jira
 
 ## Prompt 5
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
@@ -66,7 +66,7 @@ Lista los elementos del proyecto FLOW en mi Jira
 
 ## Prompt 6
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
@@ -77,7 +77,7 @@ Lista los elementos del proyecto FLOW en mi Jira
 
 ## Prompt 7
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
@@ -88,7 +88,7 @@ Lista los elementos del proyecto FLOW en mi Jira
 
 ## Prompt 8 — el encargo, copia con harness
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
@@ -99,7 +99,7 @@ Implementa el ticket FLOW-5 de mi Jira.Implementa el ticket FLOW-5 de mi Jira.
 
 ## Prompt 9 — el encargo, copia sin harness
 
-**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Modelo:** Opus 5.5 · esfuerzo medio (por defecto)
 **Herramienta:** Claude Code CLI v2.1.303 — copia sin harness
 
 ```
