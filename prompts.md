@@ -30,7 +30,7 @@ Borra el ejemplo de abajo cuando escribas el primero.
 /init
 ```
 
-**Qué salió:** generó CLAUDE.md
+**Qué salió:** generó el archivo CLAUDE.md
 
 
 ## Prompt 2
