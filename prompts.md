@@ -22,14 +22,73 @@ Borra el ejemplo de abajo cuando escribas el primero.
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Sonnet 4.6
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
-
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+/init
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** falló con "API Error: 401 OAuth access token has expired". Tuve que hacer /login.
+
+## Prompt 2
+
+**Modelo:** Sonnet 4.6
+**Herramienta:** Claude Code
+
+```
+/init
+```
+
+**Qué salió:** funcionó a la primera, generó CLAUDE.md. Incluyó una pista del README (que el ticket omite passwordConfirmation).
+
+## Prompt 3
+
+**Modelo:** Sonnet 4.6
+**Herramienta:** Claude Code
+
+```
+Necesito conectar el servidor MCP de Atlassian a nivel de proyecto, óla configuración quede en el repositorio. Explícame qué vas a hacer en simples pasos y hazlo.
+```
+
+**Qué salió:** creó .mcp.json con mcp-remote y /v1/sse → en /mcp aparece failed
+
+## Prompt 4
+
+**Modelo:** Sonnet 4.6
+**Herramienta:** Claude Code
+
+```
+La conexión del servidor de atlassian o aparece como failed en /mcp, debe usar https://mcp.atlassian.com/v2/mcp, modifica el archivo de configuración para usar http nativo  
+```
+
+**Qué salió:** cambió .mcp.json a type http + v2/mcp. Tras reiniciar y autenticar en /mcp, connected
+
+## Prompt 5
+
+**Modelo:** Sonnet 4.6
+**Herramienta:** Claude Code
+
+```
+Crear una skill que contenga los siguientes pasos, teniendo en cuenta que el panel esta en idioma Español pero puede haber palabras en Ingles:  
+1. Traer de Jira el ticket de mayor prioridad, asignado a ti, en estado «Por hacer».
+2. Resumir sus criterios de aceptación.
+3. Entrar en plan mode y proponer cómo implementarlo.
+4. Cuando apruebes el plan, mover el ticket a «En curso».  
+```
+
+**Qué salió:** la creó global en ~/.claude/skills/start-ticket, con otro nombre y ORDER BY priority ASC
+
+## Prompt 6
+
+**Modelo:** Sonnet 4.6
+**Herramienta:** Claude Code
+
+```
+Mover la skill al proyecto, en .claude/skills/priority-ticket/SKILL.md, con name: priority-ticket
+borrar la versión global de ~/.claude/skills/start-ticket/
+cambiar el orden a ORDER BY priority DESC
+buscar solo tickets/tareas en «Por hacer»
+```
+
+**Qué salió:** movió la skill al proyecto, renombró, borró la global, corrigió DESC y estado. Todo a la primera
