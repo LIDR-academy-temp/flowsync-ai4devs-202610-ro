@@ -20,23 +20,6 @@ Borra el ejemplo de abajo cuando escribas el primero.
 
 ---
 
-## (IGNORAR se queda temporalmente para referencia) Prompt 1
-
-**Modelo:** Opus 1M xHigh
-**Herramienta:** Claude Code
-
-```
-Este es el ejemplo. Bórralo.
-
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
-```
-
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
-
----------------------------
-Inicio Ejercicio
----------------------------
 
 ## Prompt 1
 
