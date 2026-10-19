@@ -7,29 +7,103 @@ Esto no es papeleo. Lo que se revisa es **cómo pediste las cosas**, no solo lo 
 resultado flojo con un prompt bueno y un resultado flojo con un prompt vago necesitan feedback
 distinto, y sin este archivo no se distinguen.
 
-## Cómo rellenarlo
-
-- Un apartado `## Prompt N` por cada prompt.
-- **Pega el prompt tal cual lo lanzaste**, dentro del bloque de código, aunque ocupe diez líneas
-  y aunque tenga faltas. No lo reescribas para que quede bien: el que arreglaste mentalmente
-  después no es el que lanzaste.
-- Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
-- `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
-
-Borra el ejemplo de abajo cuando escribas el primero.
-
 ---
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
-**Herramienta:** Claude Code
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia con harness
 
 ```
-Este es el ejemplo. Bórralo.
-
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+/mpc
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** no funcionó: error de tecleo, el comando no existe.
+
+## Prompt 2
+
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia con harness
+
+```
+run /mcp
+```
+
+**Qué salió:** no funcionó: lo envié como mensaje y el agente respondió que /mcp hay que escribirlo directamente.
+
+## Prompt 3
+
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia con harness
+
+```
+/mcp
+```
+
+**Qué salió:** funcionó: autenticación con Atlassian correcta.
+
+## Prompt 4
+
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia con harness
+
+```
+Lista los elementos del proyecto FLOW en mi Jira
+```
+
+**Qué salió:** funcionó a la primera: devolvió FLOW-1, FLOW-2 y FLOW-3.
+
+## Prompt 5
+
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia con harness
+
+```
+/init
+```
+
+**Qué salió:** generó el CLAUDE.md base; después le añadí a mano la sección "Working rules".
+
+## Prompt 6
+
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia con harness
+
+```
+/hooks
+```
+
+**Qué salió:** confirmé que el hook PostToolUse estaba cargado.
+
+## Prompt 7
+
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia con harness
+
+```
+/memory
+```
+
+**Qué salió:** confirmé que el CLAUDE.md se estaba leyendo.
+
+## Prompt 8 — el encargo, copia con harness
+
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia con harness
+
+```
+Implementa el ticket FLOW-5 de mi Jira.Implementa el ticket FLOW-5 de mi Jira.
+```
+
+**Qué salió:** completó el ticket sin intervenciones. Nota: el texto quedó pegado dos veces por error, así que no es literalmente idéntico al de la copia sin harness, aunque el contenido es el mismo.
+
+## Prompt 9 — el encargo, copia sin harness
+
+**Modelo:Opus 5.5 · esfuerzo medio (por defecto)
+**Herramienta:** Claude Code CLI v2.1.303 — copia sin harness
+
+```
+Implementa el ticket FLOW-5 de mi Jira.
+```
+
+**Qué salió:** completó el ticket sin intervenciones.
