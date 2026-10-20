@@ -28,12 +28,46 @@ export class ApiError extends Error {
   }
 }
 
-type ErrorBody = { errors?: { message?: string }[]; message?: string }
+type ApiErrorItem = { message?: string; rule?: string; field?: string }
+type ErrorBody = { errors?: ApiErrorItem[]; message?: string }
 
-async function apiFetch<T>(
+const FIELD_LABELS: Record<string, string> = {
+  fullName: 'El nombre',
+  email: 'El email',
+  password: 'La contraseña',
+  passwordConfirmation: 'La confirmación de la contraseña',
+}
+
+// Traduce los errores de VineJS (por regla y campo); si no hay traducción, deja el mensaje del servidor
+function translateError({
+  message,
+  rule,
+  field,
+}: ApiErrorItem): string | undefined {
+  const label = (field && FIELD_LABELS[field]) || 'El campo'
+  switch (rule) {
+    case 'database.unique':
+      return 'Ya existe una cuenta con ese email.'
+    case 'required':
+      return `${label} es obligatorio.`
+    case 'email':
+      return 'Introduce un email válido.'
+    case 'minLength':
+    case 'maxLength':
+      return field === 'email'
+        ? 'El email es demasiado largo.'
+        : `${label} debe tener entre 8 y 32 caracteres.`
+    case 'sameAs':
+      return 'Las contraseñas no coinciden.'
+    default:
+      return message
+  }
+}
+
+async function request(
   path: string,
   options: { method?: string; body?: unknown; token?: string | null } = {},
-): Promise<T> {
+): Promise<unknown> {
   const headers: Record<string, string> = { Accept: 'application/json' }
   if (options.body !== undefined) headers['Content-Type'] = 'application/json'
   if (options.token) headers.Authorization = `Bearer ${options.token}`
@@ -43,30 +77,66 @@ async function apiFetch<T>(
     response = await fetch(`${API_URL}/api/v1${path}`, {
       method: options.method ?? 'GET',
       headers,
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      body:
+        options.body === undefined ? undefined : JSON.stringify(options.body),
     })
   } catch {
-    throw new ApiError('No se pudo conectar con el servidor. Inténtalo de nuevo.', 0)
+    throw new ApiError(
+      'No se pudo conectar con el servidor. Inténtalo de nuevo.',
+      0,
+    )
   }
 
-  const payload = await response.json().catch(() => null)
+  const payload: unknown = await response.json().catch(() => null)
   if (!response.ok) {
-    const body = (payload ?? {}) as ErrorBody
-    const messages = body.errors?.map((e) => e.message).filter(Boolean) ?? []
+    const body = (
+      payload && typeof payload === 'object' ? payload : {}
+    ) as ErrorBody
+    const messages = [
+      ...new Set((body.errors ?? []).map(translateError).filter(Boolean)),
+    ]
     const message =
       messages.length > 0
-        ? messages.join('. ')
+        ? messages.join(' ')
         : (body.message ?? 'Ha ocurrido un error inesperado.')
     throw new ApiError(message, response.status)
   }
-  return (payload as { data: T }).data
+  return payload
+}
+
+// Las respuestas de datos van envueltas en `data` (ver providers/api_provider.ts del backend)
+async function requestData<T>(...args: Parameters<typeof request>): Promise<T> {
+  const payload = await request(...args)
+  if (!payload || typeof payload !== 'object' || !('data' in payload)) {
+    throw new ApiError('La respuesta del servidor no es válida.', 502)
+  }
+  return payload.data as T
 }
 
 export const signup = (input: SignupInput) =>
-  apiFetch<AuthResult>('/auth/signup', { method: 'POST', body: input })
+  requestData<AuthResult>('/auth/signup', { method: 'POST', body: input })
 
-export const login = (email: string, password: string) =>
-  apiFetch<AuthResult>('/auth/login', { method: 'POST', body: { email, password } })
+export async function login(email: string, password: string) {
+  try {
+    return await requestData<AuthResult>('/auth/login', {
+      method: 'POST',
+      body: { email, password },
+    })
+  } catch (err) {
+    // el backend responde 400 "Invalid user credentials" cuando email o contraseña no coinciden
+    if (err instanceof ApiError && (err.status === 400 || err.status === 401)) {
+      throw new ApiError(
+        'El email o la contraseña no son correctos.',
+        err.status,
+      )
+    }
+    throw err
+  }
+}
 
 export const getProfile = (token: string) =>
-  apiFetch<User>('/account/profile', { token })
+  requestData<User>('/account/profile', { token })
+
+// Logout devuelve `{ message }` sin envolver
+export const logout = (token: string) =>
+  request('/account/logout', { method: 'POST', token }).then(() => undefined)

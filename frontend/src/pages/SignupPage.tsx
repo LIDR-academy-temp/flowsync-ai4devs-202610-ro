@@ -3,7 +3,14 @@ import type { FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/lib/auth'
@@ -23,6 +30,10 @@ export default function SignupPage() {
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
     setError(null)
+    if (password.length < 8 || password.length > 32) {
+      setError('La contraseña debe tener entre 8 y 32 caracteres.')
+      return
+    }
     if (password !== passwordConfirmation) {
       setError('Las contraseñas no coinciden.')
       return
@@ -31,13 +42,15 @@ export default function SignupPage() {
     try {
       await signup({
         fullName: fullName.trim() || null,
-        email,
+        email: email.trim(),
         password,
         passwordConfirmation,
       })
       navigate('/profile', { replace: true })
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudo crear la cuenta.')
+      setError(
+        err instanceof Error ? err.message : 'No se pudo crear la cuenta.',
+      )
       setSubmitting(false)
     }
   }
@@ -47,7 +60,9 @@ export default function SignupPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Crear cuenta</CardTitle>
-          <CardDescription>Regístrate para empezar con FlowSync.</CardDescription>
+          <CardDescription>
+            Regístrate para empezar con FlowSync.
+          </CardDescription>
         </CardHeader>
         <form onSubmit={onSubmit} noValidate>
           <CardContent className="flex flex-col gap-4">

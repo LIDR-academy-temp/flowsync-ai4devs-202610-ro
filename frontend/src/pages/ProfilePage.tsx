@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { ApiError, getProfile } from '@/lib/api'
 import type { User } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
@@ -12,6 +18,7 @@ export default function ProfilePage() {
   const navigate = useNavigate()
   const [user, setUser] = useState<User | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     if (!token) return
@@ -27,12 +34,19 @@ export default function ProfilePage() {
           navigate('/login', { replace: true })
           return
         }
-        setError(err instanceof Error ? err.message : 'No se pudo cargar el perfil.')
+        setError(
+          err instanceof Error ? err.message : 'No se pudo cargar el perfil.',
+        )
       })
     return () => {
       cancelled = true
     }
-  }, [token, logout, navigate])
+  }, [token, logout, navigate, attempt])
+
+  function onRetry() {
+    setError(null)
+    setAttempt((n) => n + 1)
+  }
 
   function onLogout() {
     logout()
@@ -52,7 +66,14 @@ export default function ProfilePage() {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          {!user && !error && <p className="text-sm text-muted-foreground">Cargando…</p>}
+          {error && (
+            <Button variant="secondary" onClick={onRetry}>
+              Reintentar
+            </Button>
+          )}
+          {!user && !error && (
+            <p className="text-sm text-muted-foreground">Cargando…</p>
+          )}
           {user && (
             <div className="flex items-center gap-4">
               <div

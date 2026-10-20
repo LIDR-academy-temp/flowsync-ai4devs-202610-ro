@@ -1,4 +1,11 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import type { ReactNode } from 'react'
 import * as api from '@/lib/api'
 import type { SignupInput } from '@/lib/api'
@@ -33,11 +40,21 @@ function writeToken(token: string | null) {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(readToken)
+  const tokenRef = useRef(token)
 
   const store = useCallback((next: string | null) => {
+    tokenRef.current = next
     writeToken(next)
     setToken(next)
   }, [])
+
+  // Referencia estable: no cambia al iniciar o cerrar sesión
+  const logout = useCallback(() => {
+    const current = tokenRef.current
+    store(null)
+    // Se invalida el token en el servidor; si falla, la sesión local ya está cerrada
+    if (current) api.logout(current).catch(() => {})
+  }, [store])
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -48,9 +65,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signup: async (input) => {
         store((await api.signup(input)).token)
       },
-      logout: () => store(null),
+      logout,
     }),
-    [token, store],
+    [token, store, logout],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
