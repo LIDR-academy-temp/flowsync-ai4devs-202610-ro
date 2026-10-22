@@ -1,35 +1,43 @@
-# Prompts
-
-Aquí van **todos los prompts que lanzaste** para hacer el ejercicio, en el orden en que los
-lanzaste, con el modelo y la herramienta de cada uno.
-
-Esto no es papeleo. Lo que se revisa es **cómo pediste las cosas**, no solo lo que salió: un
-resultado flojo con un prompt bueno y un resultado flojo con un prompt vago necesitan feedback
-distinto, y sin este archivo no se distinguen.
-
-## Cómo rellenarlo
-
-- Un apartado `## Prompt N` por cada prompt.
-- **Pega el prompt tal cual lo lanzaste**, dentro del bloque de código, aunque ocupe diez líneas
-  y aunque tenga faltas. No lo reescribas para que quede bien: el que arreglaste mentalmente
-  después no es el que lanzaste.
-- Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
-- `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
-
-Borra el ejemplo de abajo cuando escribas el primero.
-
----
-
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
-**Herramienta:** Claude Code
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (extensión de VS Code)
 
 ```
-Este es el ejemplo. Bórralo.
-
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+da un resume de qué capabilities hay ya construidas y cómo es el modelo de datos actual
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** exploró el código y vio que el CLAUDE.md estaba desactualizado: el frontend ya tenía login, registro y perfil, no era la plantilla de Vite. Devolvió el resumen del terreno.
+
+## Prompt 2
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (extensión de VS Code)
+
+```
+2.  Genera las cinco preguntas que más reducirían la incertidumbre sobre el problema, los usuarios y el alcance, no bajes al modelo de datos o los enpoints
+```
+
+**Qué salió:** lo tomó como orden y lanzó las cinco preguntas en una sola ronda, sin bajar a datos ni endpoints.
+
+## Prompt 3
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (extensión de VS Code)
+
+```
+Genera el alcance en cinco bloques. Problema · usuarios · propuesta de valor · alcance · NO-alcance. Recorta y que justifica cada exclusión.
+```
+
+**Qué salió:** como la ficha seguía sin pegarse, la sacó del README (desviación del proceso). Propuso los cinco bloques: 9 puntos de alcance, 17 exclusiones justificadas, supuestos declarados y dos tensiones detectadas en la ficha.
+
+## Prompt 4
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (extensión de VS Code)
+
+```
+quita los puntos 5, 8 y 9 del alcance inicial
+```
+
+**Qué salió:** recorte mío de 9 a 6 (fuera la fecha de vencimiento, el "qué se ha movido desde tu última visita" y editar o borrar). La IA señaló que quitar la fecha contradice la ficha y que quitar el punto 8 debilita "llego por la mañana y veo qué se ha movido".
