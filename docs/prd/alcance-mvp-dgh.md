@@ -17,12 +17,12 @@ Lo que el MVP **no** resuelve: la parte de bloqueos de la daily sigue existiendo
 
 ## 3. Propuesta
 
-Una lista de tareas compartida que es **a la vez la cola de trabajo de cada persona y el estado del equipo**, y que se mantiene al día sola.
+Una lista de tareas compartida que es **a la vez el sitio donde cada persona elige su siguiente tarea y el estado del equipo**, y que se mantiene al día sola.
 
 - **Es donde se hace el trabajo, no donde se cuenta.** Sustituye al gestor de tareas actual; no convive con él. Convivir exigiría doble actualización, y así muere esta categoría de producto.
-- **Por qué se sostiene:** actualizar son dos clics sobre una lista que ya está abierta, sin campos obligatorios salvo el título. Y quien actualiza cobra en el momento: esa lista es su cola y, además, deja de recibir interrupciones.
+- **Por qué se sostiene:** actualizar cuesta uno o dos clics sobre una lista que ya está abierta, sin campos obligatorios salvo el título. Y quien actualiza cobra en el momento: de esa lista elige qué coger y, además, deja de recibir interrupciones.
 - **"Menos rollo que Jira":** crear una tarea y cambiarle el estado en segundos, sin configuración de flujos.
-- **"Tiempo real" significa frescura, no presencia.** Se ven los cambios de estado de las tareas sin refrescar ni preguntar. El estado es de la **tarea**, no de la persona.
+- **"Tiempo real" significa frescura, no presencia.** Se ven los cambios de las tareas sin refrescar ni preguntar. El estado es de la **tarea**, no de la persona.
 - **La señal es un resumen que espera, no un aviso que interrumpe:** "llego por la mañana o vuelvo de una reunión y veo qué se ha movido".
 
 ### Decisión que habilita
@@ -37,11 +37,13 @@ Si la única respuesta fuera "sentirse informado", el tiempo real no valdría lo
 - **Para el usuario:** dejar de hacer la ronda de "¿en qué estás?" porque el estado del equipo se ve de un vistazo.
 - **Criterio a una semana de uso real:** el equipo cancela esa ronda y nadie pide que vuelva. Si la siguen haciendo igual, el MVP no ha funcionado.
 
-## 5. Riesgo principal
+## 5. Riesgos
 
-**Que el estado de las tareas se quede viejo.** Si pasa, el producto pierde el sentido. Es el riesgo #1 a validar, no un detalle.
-
-La mitigación es que actualizar cueste dos clics; no se obliga a nadie a hacerlo.
+1. **Que el estado de las tareas se quede viejo.** Si pasa, el producto pierde el sentido. Es el riesgo #1 a validar, no un detalle. La mitigación es que actualizar cueste uno o dos clics; no se obliga a nadie a hacerlo.
+2. **El registro es abierto y el espacio es único.**
+   - `POST /auth/signup` es público, así que cualquiera que llegue a la URL puede registrarse y ver, editar o borrar cualquier tarea.
+   - Con el borrado físico sin papelera, es el principal hueco de seguridad del MVP.
+   - Para el caso de estudio es aceptable si la instalación no es pública. Ver la pregunta abierta 1 de la sección 14.
 
 ## 6. Alcance
 
@@ -50,11 +52,11 @@ Es una vertical fina y usable de punta a punta. Se prefiere una capability termi
 | # | Capability | Detalle |
 |---|---|---|
 | 1 | **Espacio único** | Todo usuario registrado ve todas las tareas y puede actuar sobre ellas según las reglas de la sección 7. No existe la entidad "equipo". |
-| 2 | **Crear / editar tarea** | Al crear, solo el título es obligatorio y la fecha de vencimiento es opcional. Al editar se pueden cambiar el título, la fecha de vencimiento y el **responsable**. El **estado no se edita**: solo cambia con las transiciones de la capability 3. |
-| 3 | **Empezar y terminar** | Una tarea en `Por hacer` se **empieza** con un clic: quien la empieza queda como responsable y la tarea pasa a `En curso`, todo en un paso. Solo su responsable puede pasarla a `Hecha`, con doble clic. |
-| 4 | **Vencimiento** | Una tarea no `Hecha` cuya fecha de vencimiento ya ha pasado se marca como **vencida**. Es un dato calculado, no un estado. |
-| 5 | **Filtro por estado** | Filtra la lista por uno o varios estados. Por defecto muestra `Por hacer` y `En curso`. `Por hacer` es la lista de "lo que está libre". |
-| 6 | **Frescura** | La lista se actualiza sola, sin refrescar. Las tareas que han cambiado desde tu última visita aparecen resaltadas. |
+| 2 | **Crear / editar tarea** | Al crear, solo el título es obligatorio y la fecha de vencimiento es opcional. Al editar se pueden cambiar el título y la fecha de vencimiento en cualquier estado, y el **responsable** solo en `En curso`. El **estado no se edita**: solo cambia con las transiciones de la capability 3. |
+| 3 | **Empezar y terminar** | Una tarea en `Por hacer` se **empieza** con un clic: quien la empieza queda como responsable y la tarea pasa a `En curso`, todo en un paso. Solo su responsable puede **terminarla** y pasarla a `Hecha`, con dos clics: el botón "Terminar" y la confirmación. |
+| 4 | **Vencimiento** | Una tarea no `Hecha` cuya fecha de vencimiento ya ha pasado se marca como **vencida**. Se calcula en el frontend; no se guarda ni viaja en la API. |
+| 5 | **Filtro por estado** | Filtra la lista por uno o varios estados, en el cliente. Por defecto muestra `Por hacer` y `En curso`. `Por hacer` es la lista de "lo que está libre". |
+| 6 | **Frescura** | La lista se actualiza sola, sin refrescar. Las tareas que otra persona ha cambiado desde tu última visita aparecen resaltadas, y un aviso cuenta las que se han terminado aunque el filtro las oculte. Detalle en la sección 12. |
 | 7 | **Borrar tarea** | Cualquiera puede borrar una tarea, en cualquier estado, tras confirmar. Es un borrado físico, sin papelera. |
 
 ## 7. Reglas de estado y responsable
@@ -69,10 +71,12 @@ Es una vertical fina y usable de punta a punta. Se prefiere una capability termi
 - **No hay vuelta atrás.** Una tarea no se suelta (`En curso → Por hacer`) ni se reabre (`Hecha → …`). Si hace falta más trabajo sobre algo terminado, se crea otra tarea.
 - **El responsable solo se edita en `En curso`,** y siempre hay que elegir a alguien; no se puede dejar vacío.
   - Es la vía para que otra persona **tome una tarea de forma consciente**, por ejemplo si su responsable la ha abandonado. Después de cambiarlo, el nuevo responsable puede terminarla.
-  - La UI pide confirmación cuando el cambio te quita la tarea a otra persona.
+  - La UI pide confirmación cuando el cambio le quita la tarea a otra persona. Es una protección de experiencia de uso, no de seguridad: el servidor no la exige.
   - Si la tarea está en `Por hacer`, se asigna empezándola. Si está en `Hecha`, el responsable queda como registro de quién la hizo y no se cambia.
-- **Conflicto al empezar.** Si dos personas pulsan "Empezar" sobre la misma tarea, la segunda recibe un `409` y la UI le muestra quién la ha cogido ("Ana ya está en esto"). Es la protección directa contra el episodio de los dos días perdidos.
+- **Las transiciones son atómicas.** El backend las ejecuta como un `UPDATE … WHERE id = ? AND status = ?` condicional. Si no se actualiza ninguna fila, devuelve el error que corresponda (sección 11). No se admite comprobar el estado y después escribir en dos pasos.
+- **Conflicto al empezar.** Si dos personas pulsan "Empezar" sobre la misma tarea, la segunda recibe un `409` con el estado actual de la tarea y la UI le muestra quién la ha cogido ("Ana ya está en esto"). Es la protección directa contra el episodio de los dos días perdidos.
   - Límite: solo protege si los dos trabajan sobre la **misma** tarea. Dos tareas con títulos distintos sobre el mismo módulo no se detectan.
+- **Ediciones simultáneas** de título o fecha: gana la última escritura. Se asume a este volumen de equipo.
 - **Consecuencia asumida:** una tarea empezada por error se queda en `En curso`. Las salidas posibles son terminarla, reasignarla o borrarla.
 
 ## 8. Fuera del MVP
@@ -87,13 +91,16 @@ Es una vertical fina y usable de punta a punta. Se prefiere una capability termi
 - Sprints, estimaciones, épicas y backlog priorizado. Un equipo que necesite eso no es nuestro usuario.
 - Cualquier indicador de presencia o de actividad de personas, como "quién está conectado" o "última vez visto". Se rechaza a propósito porque es vigilancia.
 - Chat, videollamada y edición simultánea de un mismo documento.
+- Borrar usuarios.
+- Paginar o archivar las tareas `Hecha`.
 
 ## 9. Supuestos
 
-- **Una instalación es un único espacio compartido.** Cualquiera que se registre ve todas las tareas. Para el caso de estudio es aceptable; con varios equipos no lo sería.
+- **Una instalación es un único espacio compartido.** Cualquiera que se registre ve todas las tareas (riesgo 2 de la sección 5).
 - **El estado lo teclea la persona que hace la tarea.** No se deriva de ninguna otra fuente.
-- **El volumen es pequeño:** decenas o pocos cientos de tareas activas y 10 usuarios como máximo. Esto justifica el polling sobre SQLite.
-- **La fecha de vencimiento es un día, sin hora.** Con 3 husos horarios, "vencida" se calcula con la fecha local de quien mira la lista.
+- **El volumen es pequeño:** decenas o pocos cientos de tareas en total y 10 usuarios como máximo. Esto justifica pedir la lista completa en cada polling, sin paginación, sobre SQLite.
+- **La fecha de vencimiento es un día, sin hora.** Viaja como `YYYY-MM-DD`. Con 3 husos horarios, "vencida" se calcula con la fecha local de quien mira la lista, así que durante unas horas dos personas pueden ver distinto si una tarea está vencida.
+- **Las tareas borradas desaparecen sin más.** El resaltado no avisa de los borrados.
 
 ## 10. Modelo de datos
 
@@ -101,57 +108,94 @@ Se añade una tabla nueva, `tasks`. La tabla `users` no cambia.
 
 ```
 tasks
-─────────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────────────
 id             PK increments
 title          string(200)  NOT NULL
-status         string       NOT NULL  default 'todo'   -- todo | in_progress | done
+status         enum         NOT NULL  default 'todo'   -- todo | in_progress | done (CHECK en BD)
 assignee_id    FK → users.id NULL                       -- NULL ⇔ status = 'todo'
 due_date       date         NULL
-created_by_id  FK → users.id NOT NULL
+updated_by_id  FK → users.id NOT NULL                   -- quién hizo el último cambio (crear, editar o transición)
 created_at     timestamp    NOT NULL
-updated_at     timestamp    NOT NULL                   -- base del resaltado "movido desde tu última visita"
+updated_at     timestamp    NOT NULL                   -- base de la "última visita" (sección 12)
 ```
 
-- **Relaciones:** `Task belongsTo assignee (User)` y `Task belongsTo createdBy (User)`.
-- **Dónde se aplica la regla `assignee_id NULL ⇔ status = 'todo'`:** en el backend. Las transiciones y la edición son los únicos puntos que tocan esas dos columnas.
-- **Borrado de usuarios:** no existe en el MVP. Si se añade, habrá que decidir qué pasa con sus tareas `En curso`.
+- **Relaciones:** `Task belongsTo assignee (User)` y `Task belongsTo updatedBy (User)`.
+- **`updated_by_id`** sirve para no resaltarte tus propios cambios. No es una señal de actividad de personas: no se muestra como "visto por última vez", solo identifica al autor del último cambio de la tarea.
+- **Dónde se aplica la regla `assignee_id NULL ⇔ status = 'todo'`:** con un `CHECK` en la migración si el builder de la versión instalada lo permite; si no, solo en el backend. En ambos casos, las transiciones y la edición son los únicos puntos que tocan esas columnas.
+- **Claves foráneas:** usan la política por defecto (`RESTRICT`), porque no se borran usuarios en el MVP.
 - **Sin tabla de historial:** para saber qué ha cambiado basta con `updated_at`.
 
 ## 11. API (todas con auth, bajo `/api/v1`)
 
-| Método | Ruta | Uso | Errores de negocio |
-|---|---|---|---|
-| GET | `/tasks?status=todo,in_progress` | Listar y filtrar. Incluye el responsable. | — |
-| POST | `/tasks` | Crear: `title`, `dueDate?`. Nace en `todo`. | `422` |
-| PATCH | `/tasks/:id` | Editar: `title?`, `dueDate?`, `assigneeId?`. **No acepta `status`.** | `422` si se cambia el responsable fuera de `in_progress` o se deja vacío |
-| POST | `/tasks/:id/start` | `todo → in_progress`, con responsable = quien la empieza | `409` si ya no está en `todo` (devuelve quién la tiene) |
-| POST | `/tasks/:id/complete` | `in_progress → done` | `403` si no eres el responsable; `409` si no está en `in_progress` |
-| DELETE | `/tasks/:id` | Borrar | — |
-| GET | `/users` | Selector de responsable en la edición | — |
+**Formato de error de negocio:** `{ errors: [{ message, code, meta: { task } }] }`, donde `task` es el estado actual de la tarea, con su responsable. Así la UI puede explicar el conflicto y refrescar la fila sin esperar al siguiente polling.
 
-Las transiciones de estado son endpoints propios y no un campo del `PATCH`. Así la regla de la sección 7 no se puede saltar desde la edición.
+| Método | Ruta | Uso | Errores |
+|---|---|---|---|
+| GET | `/tasks` | Lista completa, con responsable, ordenada por `created_at` descendente (orden estable para el polling). El filtro por estado se aplica en el cliente. | — |
+| POST | `/tasks` | Crear: `title`, `dueDate?`. Nace en `todo`. | `422` |
+| PATCH | `/tasks/:id` | Editar: `title?`, `dueDate?` (`null` la quita), `assigneeId?`. **No acepta `status`.** Un campo omitido no cambia. Enviar el mismo responsable que ya tiene no hace nada. | `422` si `assigneeId` es `null` o no existe el usuario. `409` si se cambia el responsable fuera de `in_progress`. `404` |
+| POST | `/tasks/:id/start` | `todo → in_progress`, con responsable = quien la empieza | `409` si ya no está en `todo`. `404` |
+| POST | `/tasks/:id/complete` | `in_progress → done` | `403` si no eres el responsable (por ejemplo, porque te la han reasignado). `409` si no está en `in_progress`. `404` |
+| DELETE | `/tasks/:id` | Borrar. Responde `204` sin cuerpo. | `404` |
+| GET | `/users` | Selector de responsable en la edición: `id`, `fullName`, `email` | — |
+
+- Las transiciones de estado son endpoints propios y no un campo del `PATCH`. Así la regla de la sección 7 no se puede saltar desde la edición.
+- **Mensajes en la UI por caso:**
+
+  | Caso | Mensaje |
+  |---|---|
+  | `409` al empezar, si la tarea está en curso | "Ana ya está en esto" |
+  | `409` al empezar, si la tarea está hecha | "Ana ya la terminó" |
+  | `403` al terminar | "Ya no eres el responsable: ahora la tiene Ana" |
+  | `404` | "Esta tarea se ha borrado" |
+
+- Cuando una persona no tiene `fullName`, la UI muestra su email.
 
 ## 12. Decisiones técnicas
 
-- **Frescura por polling, no por WebSockets ni SSE.**
-  - El frontend pide la lista completa cada ~10 s.
-  - Lo que se pide es ver los cambios sin refrescar, no colaboración simultánea, y unos segundos de retraso no cambian la decisión de qué coger.
-  - Pedir la lista entera, en vez de solo los cambios desde un instante, detecta también las tareas borradas y no añade infraestructura sobre SQLite.
-  - Si se queda corto, el siguiente paso es `@adonisjs/transmit` (SSE).
-- **"Última visita" en el navegador (`localStorage`), no en el servidor.**
-  - Al abrir la lista se lee la marca anterior, se resaltan las tareas con `updated_at` posterior y se guarda la marca nueva.
-  - El servidor no registra nada sobre la actividad de las personas, lo que es coherente con la sección 8.
-  - Coste asumido: la marca va por dispositivo.
+### Frescura por polling, no por WebSockets ni SSE
+
+- El frontend pide `GET /tasks` cada ~10 s mientras la pestaña está visible, y una vez más al volver a ella.
+- Lo que se pide es ver los cambios sin refrescar, no colaboración simultánea, y unos segundos de retraso no cambian la decisión de qué coger.
+- Pedir la lista entera, en vez de solo los cambios desde un instante, detecta también las tareas borradas y no añade infraestructura sobre SQLite.
+- Si se queda corto, el siguiente paso es `@adonisjs/transmit` (SSE).
+- **Si el polling recibe un `401`, se detiene** y se cierra la sesión, con el flujo actual de `auth-provider`.
+- **El polling no pisa una fila que se está editando.** Esa fila se actualiza al guardar o al cancelar.
+
+### "Última visita" en el navegador (`localStorage`), no en el servidor
+
+- **Marca:** es el `max(updated_at)` recibido del servidor, no la hora del reloj del cliente, para que un desfase de reloj no invente ni pierda resaltados.
+- **Al abrir la lista:**
+  - Se lee la marca guardada y se usa como referencia durante toda la sesión de la pestaña.
+  - Se resaltan las tareas con `updated_at` posterior y `updated_by_id` distinto del tuyo. Cuentan los cambios de estado, las reasignaciones y las ediciones.
+  - Los cambios que llegan por polling con la lista abierta se resaltan respecto a esa misma referencia.
+- **Aviso de terminadas:** "N tareas terminadas desde tu última visita", con acceso directo al filtro `Hecha`. Así no se pierden aunque el filtro por defecto las oculte.
+- **Cuándo se guarda la marca nueva:** cuando la pestaña pasa a oculta o se cierra, o cuando el usuario pulsa "Marcar como visto". Recargar la página no borra el resaltado de la visita en curso.
+- **Primera visita, sin marca guardada:** no se resalta nada.
+- El servidor no registra nada sobre las visitas, lo que es coherente con la sección 8.
+- **Coste asumido:** la marca va por dispositivo.
 
 ## 13. Orden de construcción
 
+Se sigue el flujo de CLAUDE.md: migración y `node ace migration:run`, que regenera `database/schema.ts` (el modelo extiende el esquema generado y solo añade relaciones); controladores registrados vía `#generated/controllers`; respuestas con transformer y `serialize()`; y se commitea el diff de `.adonisjs/`.
+
 1. **Backend:**
-   - Migración, modelo, validators, transformer, controlador de tareas y `GET /users`.
-   - Tests functional de las reglas de la sección 7, aislando la BD de los tests (hoy los tests comparten fichero SQLite con el entorno de desarrollo).
+   - Migración, modelo, validators, `TaskTransformer`, controlador de tareas con transiciones atómicas, `GET /users` con su transformer, y el formato de error de negocio de la sección 11.
+   - Tests functional de las reglas de la sección 7, incluidos el conflicto al empezar, el `403` tras reasignar y el `PATCH` sin `status`.
+   - Los tests necesitan una base de datos aislada. Hoy comparten fichero SQLite con el entorno de desarrollo. La solución es una variable de entorno (`node ace env:add`) que apunte a un fichero propio con `NODE_ENV=test`, más `testUtils.db().truncate()` entre tests.
 2. **Frontend: la lista como pantalla principal**, en lugar de `/profile`.
-   - Creación en línea, "Empezar" y "Terminar".
-   - Edición de título, fecha y responsable.
-   - Marca de vencida, filtro por estado y borrado.
-3. **Frescura:** polling, resaltado de "movido desde tu última visita" y aviso de conflicto `409`.
+   - **Rutas:** se actualizan las redirecciones de `public-only-route.tsx` y del comodín de `app-routes.tsx`. La lista tiene una cabecera con el acceso al perfil y el botón de cerrar sesión.
+   - **Cliente de la API:** `lib/api.ts` añade `PATCH` y `DELETE`, la respuesta `204` sin cuerpo, la traducción de `403`, `404` y `409` con los mensajes de la sección 11, y las etiquetas de los campos `title` y `dueDate`.
+   - **Funcionalidad:**
+     - Creación en línea, "Empezar" y "Terminar".
+     - Edición de título, fecha y responsable.
+     - Marca de vencida, filtro por estado y borrado.
+3. **Frescura:** polling, resaltado de "movido desde tu última visita", aviso de terminadas y gestión del conflicto `409`.
 
 Los pasos 1 y 2 ya sustituyen al gestor de tareas. El paso 3 es el que permite cancelar la ronda de la daily.
+
+## 14. Preguntas abiertas
+
+1. **Registro abierto (riesgo 2).** ¿Basta con no publicar la instalación, o el MVP necesita una mitigación mínima, como desactivar `signup` por variable de entorno una vez dado de alta el equipo?
+2. **¿Se reasigna a cualquiera o solo "me la quedo"?** Hoy la edición permite asignar la tarea a cualquier persona, que pasa a ser la única que puede terminarla sin haberlo pedido. Limitarlo a "me la quedo" quitaría `GET /users` y el selector.
+3. **"Mis tareas".** La propuesta (sección 3) dice que cada persona elige su trabajo en la lista, pero el filtro es solo por estado. ¿Hace falta un filtro por responsable, o basta con el filtro por estado más ver el responsable en cada fila?
