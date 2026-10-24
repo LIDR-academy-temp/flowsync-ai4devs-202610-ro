@@ -81,18 +81,32 @@ Es una vertical fina y usable de punta a punta. Se prefiere una capability termi
 
 ## 8. Fuera del MVP
 
-- Varios equipos separados, o personas en más de un equipo.
-- Notificaciones push e integración con Slack.
-- Derivar el estado de señales externas (Git/PRs, CI, calendario). Sería otro producto, con integraciones y OAuth de terceros.
-- Importar tareas de otro gestor o sincronizarse con él.
-- Roles y permisos avanzados. La única regla de permisos es la de la sección 7: quién puede terminar una tarea.
-- Comentarios en tareas.
-- Analítica, reporting e informes.
-- Sprints, estimaciones, épicas y backlog priorizado. Un equipo que necesite eso no es nuestro usuario.
-- Cualquier indicador de presencia o de actividad de personas, como "quién está conectado" o "última vez visto". Se rechaza a propósito porque es vigilancia.
-- Chat, videollamada y edición simultánea de un mismo documento.
-- Borrar usuarios.
-- Paginar o archivar las tareas `Hecha`.
+Todo lo que queda fuera se descarta por al menos uno de estos tres criterios:
+
+- **(A) No ayuda a la decisión que el MVP habilita.** Esa decisión es no empezar algo que otra persona ya está haciendo y elegir lo siguiente sabiendo qué está libre (sección 3).
+- **(B) Va en contra de la apuesta.** La apuesta es que actualizar cueste uno o dos clics y que la herramienta no vigile a nadie.
+- **(C) Es caro para lo que valida.** Lo primero que hay que validar es si el estado se mantiene al día (riesgo #1); todo lo demás se apoya en esa hipótesis.
+
+| Fuera del MVP | Criterio | Por qué |
+|---|---|---|
+| **Varios equipos, o personas en más de uno** | C | Obliga a crear entidades de equipo y de miembros, invitaciones, permisos por equipo y un selector de contexto, que es la mayor parte del coste de un producto multi-tenant. El caso de estudio es un solo equipo de 6 personas: un espacio único lo cubre entero y valida lo mismo. |
+| **Notificaciones push** | B | La señal es "un resumen que espera, no un aviso que interrumpe". El push recrearía la interrupción que se quiere quitar, solo que viniendo de FlowSync en vez de Slack. |
+| **Integración con Slack** | B, C | Llevaría el estado a otro sitio, y FlowSync tiene que ser donde se mira, no donde se copia. Además exige OAuth y una app de Slack, mucho coste para algo que no valida el riesgo #1. |
+| **Derivar el estado de Git/PRs, CI o calendario** | C | Sería otro producto: integraciones, OAuth de terceros y heurísticas para traducir un PR en un estado de tarea. Y esconde el riesgo #1 en vez de validarlo: si el estado se mantiene fresco solo porque se calcula solo, no se sabrá si el equipo lo mantendría a mano. |
+| **Importar tareas de otro gestor o sincronizarse con él** | B | FlowSync sustituye al gestor actual, no convive con él. Sincronizar obliga a actualizar en dos sitios, que es como muere esta categoría de producto. Importar sería un paso de migración, no parte del producto, y con 6 personas se puede hacer a mano. |
+| **Roles y permisos avanzados** | A, B | Los roles son planos y no hay un lead que gestione. La única regla con valor real es que solo el responsable termina su tarea, porque protege la señal de "quién está en qué" (sección 7). Cualquier otra jerarquía añade fricción sin cambiar ninguna decisión. |
+| **Comentarios en tareas** | A, B | Convierten la lista en un canal de conversación, que es justo el "rollo" que se quiere evitar. Tampoco hacen falta para saber quién está en qué. La conversación sigue en el chat que el equipo ya usa. |
+| **Analítica, reporting e informes** | A | No hay reporte hacia arriba y a un manager le da igual. Quien cobra el valor son los pares, y a un par no le sirve un informe. El criterio de éxito (sección 4) es cualitativo y no necesita instrumentación. |
+| **Sprints, estimaciones, épicas y backlog priorizado** | B | Es la renuncia explícita a ser Jira. Cada uno es un campo o una ceremonia más que rompe lo de "uno o dos clics". Un equipo que los necesite no es nuestro usuario. |
+| **Indicadores de presencia o de actividad de personas** ("quién está conectado", "última vez visto") | A, B | Es vigilancia, y se rechaza a propósito. El estado es de la tarea, no de la persona. Ver quién está conectado no ayuda a elegir tarea y erosiona la confianza que el producto necesita para que la gente actualice. |
+| **Chat, videollamada y edición simultánea de un mismo documento** | A, C | "Tiempo real" significa ver el estado fresco, no colaborar a la vez. Ya hay herramientas para eso, y construirlas requeriría infraestructura de tiempo real que el polling no necesita. |
+| **Borrar usuarios** | C | Abre preguntas sin contestar, como qué pasa con sus tareas `En curso`. Con 6 personas y un caso de estudio no se da. |
+| **Paginar o archivar las tareas `Hecha`** | C | Con decenas o pocos cientos de tareas, la lista completa cabe en cada consulta del polling (sección 9). Paginar añade complejidad al refresco y al resaltado sin una necesidad real todavía. |
+
+### Lo que el alcance tampoco resuelve (no es un recorte)
+
+- **Los bloqueos de la daily.** La ronda de estado desaparece, pero la de bloqueos sigue. El MVP no lo intenta, y venderlo como "adiós a la daily" falsearía el criterio de éxito.
+- **El duplicado entre tareas distintas.** El `409` evita que dos personas empiecen la misma tarea. No detecta dos tareas con títulos diferentes sobre el mismo módulo; eso depende de que el equipo mire la lista.
 
 ## 9. Supuestos
 
