@@ -1,35 +1,26 @@
 # Prompts
 
-Aquí van **todos los prompts que lanzaste** para hacer el ejercicio, en el orden en que los
-lanzaste, con el modelo y la herramienta de cada uno.
-
-Esto no es papeleo. Lo que se revisa es **cómo pediste las cosas**, no solo lo que salió: un
-resultado flojo con un prompt bueno y un resultado flojo con un prompt vago necesitan feedback
-distinto, y sin este archivo no se distinguen.
-
-## Cómo rellenarlo
-
-- Un apartado `## Prompt N` por cada prompt.
-- **Pega el prompt tal cual lo lanzaste**, dentro del bloque de código, aunque ocupe diez líneas
-  y aunque tenga faltas. No lo reescribas para que quede bien: el que arreglaste mentalmente
-  después no es el que lanzaste.
-- Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
-- `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
-
-Borra el ejemplo de abajo cuando escribas el primero.
-
----
-
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
-**Herramienta:** Claude Code
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (app de escritorio)
 
 ```
-Este es el ejemplo. Bórralo.
+@"/home/noureddine/Baixades/BORRAR/Resumen_Del_PRD_al_backlog.pdf" @"/home/noureddine/Baixades/BORRAR/Resumen_PRD_MVP_FlowSync.pdf" @"/home/noureddine/Baixades/BORRAR/Resumen_PRD_cadena_de_granularidad.pdf" @"/home/noureddine/Baixades/BORRAR/Resumen_SDD_cuello_de_botella.pdf"
+lee esos pdf y has esa taria sin dejar un rastro
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+[pegado: enunciado completo del ejercicio "FlowSync: recorta un MVP hasta que puedas defenderlo", incluida la ficha de hechos y la lista de lo que queda fuera del MVP]
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** exploró el repo (solo auth y tabla de usuarios), escribió `docs/prd/alcance-mvp-na.md` con los tres tramos y las tres líneas. Dejó sin rellenar el número de propuestas y este archivo, y no hizo commit.
+
+## Prompt 2
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (app de escritorio)
+
+```
+has la taria y antes de entregarla mostrame las resultados
+```
+
+**Qué salió:** listó la propuesta completa de la IA (11 cosas), dejó 6 dentro tras el recorte y rellenó este archivo. No entregó nada.
