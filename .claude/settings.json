@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */../*) exit 0 ;; \"$CLAUDE_PROJECT_DIR\"/frontend/src/*) ;; *) exit 0 ;; esac; p=\"$CLAUDE_PROJECT_DIR/frontend/node_modules/.bin/prettier\"; [ -x \"$p\" ] || { printf 'Prettier no encontrado en %s (ejecuta npm install en frontend/)\\n' \"$p\" >&2; exit 2; }; out=$(\"$p\" --write --ignore-unknown \"$f\" 2>&1) || { printf 'Prettier falló al formatear %s:\\n%s\\n' \"$f\" \"$out\" >&2; exit 2; }",
+            "timeout": 30,
+            "statusMessage": "Formateando con Prettier..."
+          }
+        ]
+      }
+    ]
+  }
+}
