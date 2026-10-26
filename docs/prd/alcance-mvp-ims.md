@@ -74,6 +74,10 @@ Criterio a una semana de uso real: el equipo cancela la ronda de "¿en qué est�
 - **Invitaciones y onboarding de equipo.** Con espacio único, quien se registra entra en él (ver supuestos).
 - **Cambio de responsable en tareas en curso**: No se puede traspasar una tarea en curso. Si quien la lleva se va de vacaciones, la única salida es devolverla a "Pendiente" y que otra persona la vuelva a coger.
 
+##  La IA me discutió una decisión tuya y tenía razón
+
+- Cuando le he indicado que se asignaba automáticamente el responsable cuando la tarea se ponía en curso. No se puede traspasar una tarea en curso. Si quien la lleva se va de vacaciones, la única salida es devolverla a "Pendiente" y que otra persona la vuelva a coger.
+
 ## Parte B: las tres líneas
 
 1. **Los dos números.** La IA propuso 7 cosas dentro del alcance; tras mi recorte quedaron 6 (quité dos y añadí una).
