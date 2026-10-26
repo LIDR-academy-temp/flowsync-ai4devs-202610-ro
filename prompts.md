@@ -154,3 +154,25 @@ No cambies ninguna otra sección de CLAUDE.md y no modifiques archivos de códig
 ```
 
 **Qué salió:** Agregó la sección de reglas de proceso al final de `CLAUDE.md`; después se creó `AGENTS.md` como enlace simbólico a `CLAUDE.md`.
+
+## Prompt 6
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```text
+/priority-ticket
+```
+
+**Qué salió:** Encontró FLOW-1, revisó el contrato real de la API y propuso un plan sin modificar código ni mover el ticket a "En curso".
+
+## Prompt 7
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```text
+Busca en Jira el ticket de mayor prioridad asignado a mí que esté en estado "Por hacer". Muestra su identificador, título y descripción, resume sus criterios de aceptación y revisa el repositorio para proponer un plan concreto de implementación. No modifiques archivos ni cambies el estado del ticket; solo presenta el plan para que pueda compararlo con otra ejecución.
+```
+
+**Qué salió:** Encontró FLOW-1 y propuso un plan detallado sin modificar archivos ni cambiar el estado del ticket.
