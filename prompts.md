@@ -49,4 +49,23 @@ No modifiques el código. Aunque encuentres errores o inconsistencias, déjalos 
 Idioma: español, excepto las palabras clave de la RFC.
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:**  Funciono. Tuve que pararle porque iba hacer el PR
+
+## Prompt 2
+
+**Modelo:** Sonnet 5.5 Medium
+**Herramienta:** Claude Code
+
+```
+Comprueba con el api y la web levantada, que las spec de  se cumplen y dime cuales si, cuales no se cumplen spec-viva/fp.md
+```
+## Prompt 3
+
+**Modelo:** Sonnet 5.5 Medium
+**Herramienta:** Claude Code
+
+```
+
+venga vamos a por el PR, Hagamos primero el PR en el fork para que salte el adversarial, y luego hacemo el PR real contral el upstreams si todo ok
+
+```
