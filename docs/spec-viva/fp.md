@@ -218,7 +218,7 @@ Al pulsar "Cerrar sesión", la aplicación SHALL eliminar la sesión local (toke
 ## 1. Requisitos escritos y comprobados
 
 - Requisitos escritos por el agente: 13
-- Requisitos que comprobé yo abriendo el código: 14
+- Requisitos que comprobé yo abriendo el código: 13
 
 ## 2. Incoherencias que aparecieron al escribirla
 
