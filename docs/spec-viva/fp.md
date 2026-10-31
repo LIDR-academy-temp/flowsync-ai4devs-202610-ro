@@ -205,3 +205,27 @@ Al pulsar "Cerrar sesión", la aplicación SHALL mostrar en el botón "Cerrando 
 
 - **WHEN** una persona con sesión iniciada pulsa "Cerrar sesión" y el servidor no responde
 - **THEN** la aplicación la lleva igualmente al login y elimina el token guardado, aunque el token pueda seguir siendo válido en el servidor
+
+---
+
+# Parte B
+
+## 1. Requisitos escritos y comprobados
+
+- Requisitos escritos por el agente: 14
+- Requisitos que comprobé yo abriendo el código: 14
+
+## 2. Incoherencias que aparecieron al escribirla
+
+- Las iniciales de una cuenta sin nombre usan la inicial del email y la inicial del dominio (`grace@ejemplo.com` → `GE`), no las dos primeras letras del email. Se ve en la respuesta del perfil y en el círculo de la pantalla de perfil.
+- Un token inválido responde 401, pero unas credenciales inválidas en el login responden 400. Se ve en la respuesta de `POST /api/v1/auth/login` frente a la de `GET /api/v1/account/profile`.
+- El logout es la única respuesta de éxito sin el envoltorio `data`, y su mensaje está en inglés ("Logged out successfully") mientras la interfaz está en castellano. Se ve en la respuesta de `POST /api/v1/account/logout`.
+- La contraseña se limita a 32 caracteres en el registro pero no en el login. Se ve al registrarse con 33 caracteres (422) frente a iniciar sesión con 33 (se comprueban las credenciales).
+- El nombre es opcional en la pantalla de registro, pero la API exige que la clave `fullName` viaje siempre (aunque valga `null`). Se ve al omitirla en `POST /api/v1/auth/signup` (422 "must be defined").
+- Los errores de la API están en inglés; la pantalla los traduce a castellano, y sustituye cualquier 400 por "El email o la contraseña no son correctos.".
+
+## 3. Lo que no supe decidir si era bug o contrato
+
+- Al abrir la aplicación con el servidor caído, la persona queda en el login sin sesión pero el token sigue guardado. Lectura A: decisión consciente, para no cerrar la sesión por un corte pasajero. Lectura B: bug de experiencia, porque la persona ve el login aunque su token siga siendo válido y debe recargar para recuperarla. Desde fuera no se distingue.
+- Los tokens no caducan nunca, hasta que se revocan con el logout. Lectura A: contrato (sesiones indefinidas). Lectura B: omisión de una caducidad que nadie configuró. No lo pude confirmar sin ejecutarlo y esperar.
+- Al cerrar sesión con el servidor caído, la sesión local se cierra pero el token puede seguir válido en el servidor. Lectura A: la persona queda desconectada, que es lo que pidió. Lectura B: queda un token activo sin que nadie lo sepa.
