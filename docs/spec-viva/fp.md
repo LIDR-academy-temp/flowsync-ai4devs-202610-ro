@@ -53,7 +53,7 @@ El sistema SHALL permitir iniciar sesión mediante `POST /api/v1/auth/login` con
 
 ### Requirement: Consulta del perfil por API
 
-El sistema SHALL responder a `GET /api/v1/account/profile` con los datos del usuario propietario del token enviado en la cabecera `Authorization: Bearer <token>`, dentro de `data`: identificador, nombre completo (o `null`), email, iniciales, fecha de creación y fecha de actualización. Las iniciales SHALL calcularse con la primera letra de las dos primeras palabras del nombre completo, en mayúsculas; si el nombre tiene una sola palabra, con sus dos primeras letras; si no hay nombre, con las dos primeras letras de la parte local del email.
+El sistema SHALL responder a `GET /api/v1/account/profile` con los datos del usuario propietario del token enviado en la cabecera `Authorization: Bearer <token>`, dentro de `data`: identificador, nombre completo (o `null`), email, iniciales, fecha de creación y fecha de actualización. Las iniciales SHALL calcularse, en mayúsculas, con la primera letra de las dos primeras palabras del nombre completo separadas por un espacio; si el nombre tiene una sola palabra, con sus dos primeras letras; si no hay nombre, con la primera letra de la parte local del email y la primera letra de su dominio.
 
 #### Scenario: Perfil con token válido
 
@@ -63,7 +63,12 @@ El sistema SHALL responder a `GET /api/v1/account/profile` con los datos del usu
 #### Scenario: Perfil de una cuenta sin nombre
 
 - **WHEN** se solicita el perfil con un token vigente de una cuenta registrada con `fullName` a `null` y el email `grace@ejemplo.com`
-- **THEN** el sistema responde con `"fullName": null` e `"initials": "GR"`
+- **THEN** el sistema responde con `"fullName": null` e `"initials": "GE"` (inicial de `grace` e inicial de `ejemplo.com`)
+
+#### Scenario: Nombre con espacios repetidos
+
+- **WHEN** se solicita el perfil con un token vigente de una cuenta cuyo nombre completo es "Ada  Lovelace" (con dos espacios entre las palabras)
+- **THEN** el sistema responde con `"initials": "AD"`, porque la primera "palabra" tras el primer espacio es una cadena vacía
 
 #### Scenario: Perfil sin token válido
 
@@ -194,7 +199,7 @@ La aplicación SHALL mostrar en `/profile` una tarjeta con las iniciales de la p
 
 ### Requirement: Cierre de sesión desde la aplicación
 
-Al pulsar "Cerrar sesión", la aplicación SHALL mostrar en el botón "Cerrando sesión…" y deshabilitarlo, eliminar la sesión local (token y datos del usuario) de inmediato y llevar a la persona al login. La aplicación SHALL solicitar al servidor la revocación del token, pero SHALL cerrar la sesión local aunque esa petición falle.
+Al pulsar "Cerrar sesión", la aplicación SHALL eliminar la sesión local (token y datos del usuario) de inmediato y llevar a la persona al login. La aplicación SHALL solicitar al servidor la revocación del token, pero SHALL cerrar la sesión local aunque esa petición falle.
 
 #### Scenario: Cierre de sesión correcto
 
@@ -212,12 +217,12 @@ Al pulsar "Cerrar sesión", la aplicación SHALL mostrar en el botón "Cerrando 
 
 ## 1. Requisitos escritos y comprobados
 
-- Requisitos escritos por el agente: 14
+- Requisitos escritos por el agente: 13
 - Requisitos que comprobé yo abriendo el código: 14
 
 ## 2. Incoherencias que aparecieron al escribirla
 
-- Las iniciales de una cuenta sin nombre usan la inicial del email y la inicial del dominio (`grace@ejemplo.com` → `GE`), no las dos primeras letras del email. Se ve en la respuesta del perfil y en el círculo de la pantalla de perfil.
+- Con nombre, las iniciales son las de sus dos primeras palabras; sin nombre, la misma regla se aplica al email separado por la arroba y sale la inicial de la parte local más la del dominio (`grace@ejemplo.com` → `GE`), algo que difícilmente era la intención. Además, un nombre con espacios repetidos ("Ada  Lovelace") da `AD`. Se ve en la respuesta del perfil y en el círculo de la pantalla de perfil.
 - Un token inválido responde 401, pero unas credenciales inválidas en el login responden 400. Se ve en la respuesta de `POST /api/v1/auth/login` frente a la de `GET /api/v1/account/profile`.
 - El logout es la única respuesta de éxito sin el envoltorio `data`, y su mensaje está en inglés ("Logged out successfully") mientras la interfaz está en castellano. Se ve en la respuesta de `POST /api/v1/account/logout`.
 - La contraseña se limita a 32 caracteres en el registro pero no en el login. Se ve al registrarse con 33 caracteres (422) frente a iniciar sesión con 33 (se comprueban las credenciales).
@@ -227,5 +232,6 @@ Al pulsar "Cerrar sesión", la aplicación SHALL mostrar en el botón "Cerrando 
 ## 3. Lo que no supe decidir si era bug o contrato
 
 - Al abrir la aplicación con el servidor caído, la persona queda en el login sin sesión pero el token sigue guardado. Lectura A: decisión consciente, para no cerrar la sesión por un corte pasajero. Lectura B: bug de experiencia, porque la persona ve el login aunque su token siga siendo válido y debe recargar para recuperarla. Desde fuera no se distingue.
-- Los tokens no caducan nunca, hasta que se revocan con el logout. Lectura A: contrato (sesiones indefinidas). Lectura B: omisión de una caducidad que nadie configuró. No lo pude confirmar sin ejecutarlo y esperar.
+- Los tokens no caducan nunca, hasta que se revocan con el logout: en el código no hay ninguna caducidad configurada. Lectura A: contrato (sesiones indefinidas). Lectura B: omisión de una caducidad que nadie configuró. El código dice que no hay caducidad, pero no dice si alguien lo decidió.
 - Al cerrar sesión con el servidor caído, la sesión local se cierra pero el token puede seguir válido en el servidor. Lectura A: la persona queda desconectada, que es lo que pidió. Lectura B: queda un token activo sin que nadie lo sepa.
+- Al pulsar "Cerrar sesión", el botón está programado para mostrar "Cerrando sesión…", pero la sesión local se borra y se redirige al login al instante, así que esa etiqueta prácticamente no llega a verse. Lectura A: comportamiento correcto, la etiqueta es un detalle secundario. Lectura B: bug, porque el estado de carga nunca cumple su función. No lo pude comprobar a ojo y no lo incluí como requisito.
