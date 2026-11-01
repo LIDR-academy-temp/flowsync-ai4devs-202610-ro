@@ -138,3 +138,27 @@ pon los que he revisado y crea una nueva pr como se indica en el readme para la 
 ```
 
 **Qué salió:** Puso 7 de 23 como requisitos comprobados y subió el cambio. Sobre el PR, ver el resumen del agente: aquí no está instalado `gh`.
+
+## Prompt 12
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```
+en resumen esta parte es la que tienes que hacer, saltate el adversarial-reviewer que no entiendo.
+```
+
+**Qué salió:** Instaló `gh`, pero no pudo abrir el PR porque falta iniciar sesión en GitHub.
+
+## Prompt 13
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```
+git add docs/spec-viva prompts.md
+git commit -m "spec viva: cuentas y acceso + prompts"
+git push -u origin spec-viva-<tus-iniciales>
+```
+
+**Qué salió:** Hizo el commit con ese mensaje y lo subió a `spec-viva-fmj`.
