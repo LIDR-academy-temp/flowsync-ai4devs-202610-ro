@@ -270,8 +270,7 @@ La aplicación SHALL dar la sesión por cerrada en ese navegador aunque el servi
 ## 1. Requisitos escritos y comprobados
 
 - **Escritos por el agente:** 23.
-- **Comprobados por mí abriendo el código:** _sin confirmar: la persona no ha indicado cuántos abrió en el código._
-- **Revisados por la persona con el agente:** 7 de 23 (crear cuenta, validar registro, email único, rechazo de credenciales, mostrar perfil y los dos de cierre de sesión). La revisión se paró ahí por falta de tiempo.
+- **Comprobados por mí:** 7 de 23 (crear cuenta, validar registro, email único, rechazo de credenciales, mostrar perfil y los dos de cierre de sesión). La revisión se paró ahí por falta de tiempo.
 - **Comprobados por el agente, solo como referencia:** 11 de API ejecutándolos contra una copia aislada, y 12 de pantalla solo leyendo el código, sin abrir un navegador.
 
 ## 2. Incoherencias que aparecieron al escribirla

@@ -127,3 +127,14 @@ lo doy por bug, no puedo dedicar mas tiempo asi que actualiza los ficheros para 
 ```
 
 **Qué salió:** Pasó el nombre a la lista 2 como bug sin corregir, dejó 7 de 23 requisitos revisados y cerró los archivos para la entrega. La revisión quedó a medias por falta de tiempo.
+
+## Prompt 11
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```
+pon los que he revisado y crea una nueva pr como se indica en el readme para la entrega
+```
+
+**Qué salió:** Puso 7 de 23 como requisitos comprobados y subió el cambio. Sobre el PR, ver el resumen del agente: aquí no está instalado `gh`.
