@@ -22,14 +22,23 @@ Borra el ejemplo de abajo cuando escribas el primero.
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Opus 5.5
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
+el objetivo es ayudar a escribir la especificacion del codigo que ya existe y funciona del backend y frontend. sin proponer funcionalidades ni modificar codigo, debes analizar y documentar que es lo que hay y documentar como se comporta actualmente.
+Traduce eso a requisitos WHEN/THEN
+Como te comente solo vamos a trabajar con backend y frontend, pero vamos a acotarlo a solo el modulo de cuentas y acceso
+el formato que vas a tomar para realizar la especificacion es el siguiente:
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+## Purpose: una o dos frases que expliquen para qué existe esta capability.
+
+## Requirements: sección que contiene los requisitos, cada uno encabezado por ### Requirement: y redactado con SHALL para indicar lo que debe hacer el sistema.
+
+#### Scenario:: al menos uno por requisito, con dos viñetas: **WHEN***. Incluye las precondiciones dentro de WHEN, sin utilizar GIVEN.
+todo eso metelo en el archivo josesilva.md
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** (opcional, una línea) funcionó a la primera 
+# Plan: spec viva del módulo "Cuentas y acceso" en docs/spec-viva/josesilva.md
+
