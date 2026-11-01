@@ -1,35 +1,47 @@
 # Prompts
 
-Aquí van **todos los prompts que lanzaste** para hacer el ejercicio, en el orden en que los
-lanzaste, con el modelo y la herramienta de cada uno.
-
-Esto no es papeleo. Lo que se revisa es **cómo pediste las cosas**, no solo lo que salió: un
-resultado flojo con un prompt bueno y un resultado flojo con un prompt vago necesitan feedback
-distinto, y sin este archivo no se distinguen.
-
-## Cómo rellenarlo
-
-- Un apartado `## Prompt N` por cada prompt.
-- **Pega el prompt tal cual lo lanzaste**, dentro del bloque de código, aunque ocupe diez líneas
-  y aunque tenga faltas. No lo reescribas para que quede bien: el que arreglaste mentalmente
-  después no es el que lanzaste.
-- Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
-- `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
-
-Borra el ejemplo de abajo cuando escribas el primero.
-
----
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
-**Herramienta:** Claude Code
+Siguiendo los bloques:
+- registro
+- inicio de sesión
+- sesión
+- perfil
 
-```
-Este es el ejemplo. Bórralo.
+Ahora Analiza backend y frontend y enumera los comportamientos
+observables que deberían convertirse en requisitos.
+## Prompt 2
+A partir únicamente de los comportamientos que hemos identificado,
+propón una spec en español con este formato:
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
-```
+## Purpose
+## Requirements
+### Requirement:
+#### Scenario:
+- **WHEN**
+- **THEN**
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+Usa SHALL en cada requisito.
+
+Describe solo comportamientos observables desde fuera.
+No menciones clases, archivos, funciones ni detalles internos.
+No uses ADDED, MODIFIED ni REMOVED.
+No incluyas funcionalidades fuera de cuentas y acceso.
+
+Incorporalo todo al  documento /docs/spec-viva/dts.md
+## Prompt 3
+Necesito que enumeres y clasifiques los spec creados
+## Prompt 4
+Me refería al documento, que se clasifiquen en el documento
+## Prompt 5
+Ahora céntrate únicamente en el registro de usuarios.
+En base a los requisito detectados, para cada comportamiento, indícame también qué partes del código
+debería revisar yo para verificar que tu conclusión es correcta.
+No modifiques ningún archivo.
+## Prompt 6
+Haz lo mismo únicamente para el inicio de sesión.
+## Prompt 7
+Haz lo mismo para la gestión de la sesión.
+## Prompt 8
+Haz lo mismo para el perfil del usuario.
