@@ -77,4 +77,4 @@ ahora mera el ejersisio y deme que falta para instalar
 repasamos los ponto del eersisio y analisa lo que lafta y haslo
 ```
 
-**Qué salió:** validó la spec contra los criterios del ejercicio, dejó a 0 los requisitos revisados a mano y abrió el PR.
+**Qué salió:** validó la spec contra los criterios del ejercicio, dejó a 0 los requisitos revisados a mano, hizo el commit y el push a mi fork. El PR lo abrí yo desde GitHub.
