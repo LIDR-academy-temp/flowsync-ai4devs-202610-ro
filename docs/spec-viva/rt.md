@@ -303,3 +303,221 @@ El sistema SHALL conservar la sesión entre recargas y visitas en el mismo naveg
 
 - **WHEN** la pantalla de inicio de sesión muestra un aviso de sesión perdida y la persona intenta iniciar sesión con credenciales incorrectas
 - **THEN** el aviso pasa a mostrar "El email o la contraseña no son correctos." en lugar del motivo de la sesión perdida
+
+
+# Parte B
+
+Se generaron **17 requisitos** en la Parte A. Esta parte los contrasta con el código existente.
+
+Leyenda de la lista de comprobación: ✅ coincide con el código · ⚠️ coincide solo en parte o con matices · ❌ no coincide. Método: **[L]** comprobado leyendo el código; **[E]** comprobado además ejecutando la lógica real (validador de VineJS del proyecto, o la expresión de las iniciales copiada literalmente). No se arrancó el servidor ni el navegador: ningún punto se ha probado de extremo a extremo con peticiones HTTP reales ni en pantalla.
+
+## 1. Requisitos generados y comprobados
+
+Requisitos escritos: **17**. Requisitos comprobados: **17** (8 de API y 9 de pantalla). Resultado: 11 sin incoherencias, 6 con alguna (R1, R2, R3, R14, R15, R17) (ver sección 2).
+
+### B.1 Registro de cuenta en la API (línea 9)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Registro con `POST /api/v1/auth/signup` | `backend/start/routes.ts:22`, `backend/app/controllers/new_account_controller.ts:7-17`, `backend/app/validators/user.ts:12-17`, `backend/app/transformers/user_transformer.ts:6-13`, `backend/database/schema.ts` (`password` con `serializeAs: null`, `updatedAt` con `autoCreate`) |
+
+- ✅ [L] Responde `{ data: { user, token } }` con estado 200 por defecto (el controlador no fija otro).
+- ✅ [L] `user` contiene exactamente `id`, `fullName`, `email`, `createdAt`, `updatedAt`, `initials`; no incluye la contraseña.
+- ✅ [E] `fullName: null` valida y se conserva como `null`.
+- ⚠️ [E] "Nombre completo opcional": en la API la clave es obligatoria; solo admite el valor `null` (ver sección 2).
+
+### B.2 Validación del registro (línea 23)
+
+| Requisito | Ubicación en código |
+|---|---|
+| 422 con `errors[]` con `field` y `rule` | `backend/app/validators/user.ts:6-17`; `backend/config/bodyparser.ts` (cadenas vacías pasan a `null`) |
+
+- ✅ [E] Contraseña corta o larga: reglas `minLength` (meta `min: 8`) y `maxLength` (meta `max: 32`).
+- ✅ [E] Email con formato inválido: regla `email`; email > 254: `maxLength`.
+- ✅ [L] Email repetido: regla `database.unique` (`node_modules/@adonisjs/lucid/build/src/bindings/vinejs.js:15`).
+- ✅ [L] Confirmación distinta: regla `sameAs` sobre `passwordConfirmation` (`user.ts:16`).
+- ✅ [E] Campo ausente o vacío: regla `required`.
+- ⚠️ [E] El escenario de longitud solo nombra `password`; la misma regla se aplica a `passwordConfirmation`. Tampoco se menciona que `fullName` ausente da `required`.
+
+### B.3 Iniciales del usuario (línea 52)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Cálculo de `initials` | `backend/app/models/user.ts:11-17`; expuesto en `backend/app/transformers/user_transformer.ts:12` |
+
+- ✅ [E] "Ada Lovelace" → "AL"; "Ada" → "AD"; sin nombre y `ana@ejemplo.com` → "AE"; "Ada María Lovelace" → "AM".
+- ⚠️ [E] Separa solo por un espacio simple: "Ada  Lovelace" (dos espacios) → "AD" y " Ada" (espacio inicial) → "" (ver sección 2).
+
+### B.4 Inicio de sesión en la API (línea 71)
+
+| Requisito | Ubicación en código |
+|---|---|
+| `POST /api/v1/auth/login` emite token nuevo | `backend/start/routes.ts:23`, `backend/app/controllers/access_tokens_controller.ts:8-17`, `backend/app/models/user.ts:7` |
+
+- ✅ [L] Responde `{ data: { user, token } }` con 200.
+- ✅ [L] Cada login crea un token (`accessTokens.create`) y no borra ninguno anterior.
+- ✅ [L] No se define caducidad: el proveedor solo la aplica si se pasa `expiresIn` (`node_modules/@adonisjs/auth/build/modules/access_tokens_guard/main.js:1041`) y el modelo no lo pasa.
+
+### B.5 Rechazo del inicio de sesión (línea 85)
+
+| Requisito | Ubicación en código |
+|---|---|
+| 400 por credenciales, 422 por formato | `backend/app/controllers/access_tokens_controller.ts:9-11`, `backend/app/validators/user.ts:23-26`, `node_modules/@adonisjs/auth/build/errors-eDV8ejO0.js:170` (estado 400) |
+
+- ✅ [L] Email inexistente y contraseña errónea producen el mismo error (400, `{ errors: [{ message }] }`, sin `field`).
+- ✅ [L] Email mal formado o campos ausentes: 422 por el validador del login.
+
+### B.6 Consulta del perfil en la API (línea 99)
+
+| Requisito | Ubicación en código |
+|---|---|
+| `GET /api/v1/account/profile` | `backend/start/routes.ts:27,31`, `backend/app/controllers/profile_controller.ts:5-7`, `backend/app/middleware/auth_middleware.ts`, `backend/config/auth.ts:11` (guard por defecto `api`) |
+
+- ✅ [L] Token válido: 200 con `{ data: usuario }`.
+- ✅ [L] Sin token, inventado o revocado: el middleware lanza `E_UNAUTHORIZED_ACCESS`, estado 401 (`errors-eDV8ejO0.js:30`).
+
+### B.7 Cierre de sesión en la API (línea 113)
+
+| Requisito | Ubicación en código |
+|---|---|
+| `POST /api/v1/account/logout` | `backend/start/routes.ts:28`, `backend/app/controllers/access_tokens_controller.ts:19-26` |
+
+- ✅ [L] Borra solo el token usado (`accessTokens.delete(user, identifier)`); los demás siguen válidos.
+- ✅ [L] Responde `{ message: 'Logged out successfully' }` sin `data`.
+- ✅ [L] Sin token: 401 por el middleware de autenticación.
+
+### B.8 Respuestas en JSON (línea 132)
+
+| Requisito | Ubicación en código |
+|---|---|
+| JSON siempre | `backend/start/kernel.ts:26` (middleware global), `backend/app/middleware/force_json_response_middleware.ts:5-8` |
+
+- ✅ [L] El middleware fija `Accept: application/json` en todas las peticiones; el 401 del guard responde entonces con el formato JSON (`errors-eDV8ejO0.js:98-100`).
+
+### B.9 Pantalla de registro (línea 141)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Pantalla "Crea tu cuenta" | `frontend/src/pages/register-page.tsx`, `frontend/src/components/auth-layout.tsx` |
+
+- ✅ [L] Textos, campos, indicación "Entre 8 y 32 caracteres." y enlace "Inicia sesión" coinciden literalmente.
+- ✅ [L] Botón "Creando cuenta…" y deshabilitado mientras envía.
+- ✅ [L] Nombre vacío o solo espacios se envía como `null` (`fullName.trim() || null`).
+
+### B.10 Comprobación local de la confirmación (línea 160)
+
+| Requisito | Ubicación en código |
+|---|---|
+| "Las contraseñas no coinciden." sin llamar al servidor | `frontend/src/pages/register-page.tsx` (`handleSubmit`), `frontend/src/auth/use-auth-form.ts` (`failWith`) |
+
+- ✅ [L] Si no coinciden se muestra bajo la confirmación y se hace `return` antes de `signup`.
+
+### B.11 Errores del registro en pantalla (línea 169)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Traducción y reparto de errores | `frontend/src/lib/api.ts:46-70` (`translate`), `api.ts:72-102` (`toApiError`), `frontend/src/auth/use-auth-form.ts` |
+
+- ✅ [L] "Ese email ya está registrado. Inicia sesión en su lugar.", "Introduce una dirección de email válida.", mensajes de longitud con `min`/`max` (los metadatos existen, comprobado en [E] de B.2).
+- ✅ [L] Sin conexión: "No se pudo conectar con el servidor. Comprueba que el backend está arrancado." (`api.ts:125-129`); error inesperado: "Algo ha ido mal en el servidor…" (`api.ts:98-101`).
+- ✅ [L] La indicación de contraseña se sustituye por el error cuando lo hay (`register-page.tsx`).
+
+### B.12 Pantalla de inicio de sesión (línea 193)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Pantalla "Inicia sesión" | `frontend/src/pages/login-page.tsx`, `frontend/src/lib/api.ts:83-85` |
+
+- ✅ [L] Textos, botón "Entrar"/"Entrando…" y enlace "Crea una" coinciden.
+- ✅ [L] Un 400 se traduce a "El email o la contraseña no son correctos." y se muestra como aviso.
+- ✅ [L] Un campo vacío llega como `null` (`bodyparser.ts`, `json.convertEmptyStringsToNull`) y da `required`, que se muestra como "Falta rellenar la contraseña.".
+
+### B.13 Entrada tras registrarse o iniciar sesión (línea 217)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Guardar sesión y pasar al perfil | `frontend/src/auth/auth-provider.tsx:30-39` (`startSession`), `frontend/src/routes/public-only-route.tsx` |
+
+- ✅ [L] Guarda el token en el almacenamiento local y marca la sesión como autenticada; la ruta pública redirige a `/profile`.
+
+### B.14 Pantalla de perfil (línea 231)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Datos de cuenta y botón de cierre | `frontend/src/pages/profile-page.tsx` |
+
+- ✅ [L] Iniciales, nombre o "Sin nombre", email, "Miembro desde" con fecha larga `es-ES` y botón "Cerrar sesión".
+- ⚠️ [L] El formateador de fecha no fija zona horaria: se usa la del navegador, así que el día mostrado puede diferir del día UTC de alta (ver sección 2).
+
+### B.15 Cierre de sesión en pantalla (línea 245)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Cierre local siempre | `frontend/src/pages/profile-page.tsx:24-28`, `frontend/src/auth/auth-provider.tsx:98-108` |
+
+- ✅ [L] Se borra la sesión local antes de llamar al servidor y el fallo de la llamada se ignora (`.catch(() => undefined)`).
+- ✅ [L] Se limpia el aviso de sesión (`setSessionError(null)`), por lo que el login aparece sin aviso.
+- ❌ [L] El texto "Cerrando sesión…" casi seguro no llega a verse (ver sección 2).
+
+### B.16 Control de acceso a las pantallas (línea 259)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Rutas protegidas y públicas | `frontend/src/routes/app-routes.tsx`, `protected-route.tsx`, `public-only-route.tsx` |
+
+- ✅ [L] Sin sesión: `/profile` → `/login`. Con sesión: `/login` y `/register` → `/profile`. Ruta desconocida → `/profile` y, si no hay sesión, de ahí a `/login`.
+
+### B.17 Restauración de la sesión (línea 278)
+
+| Requisito | Ubicación en código |
+|---|---|
+| Rehidratación contra el servidor | `frontend/src/auth/auth-provider.tsx:15-21,45-86`, `frontend/src/components/full-screen-loader.tsx`, `frontend/src/lib/api.ts:78-83` |
+
+- ✅ [L] Con token guardado el estado inicial es "cargando" y los guards muestran solo el indicador.
+- ✅ [L] 401: se borra el token y el aviso es "Tu sesión ha caducado. Vuelve a iniciar sesión.".
+- ✅ [L] Servidor inaccesible: el token se conserva en el almacenamiento y el aviso es el de conexión.
+- ⚠️ [L] El aviso solo se pinta en la pantalla de inicio de sesión (ver sección 2).
+
+## 2. Incoherencias detectadas
+
+Una línea por incoherencia entre lo que dice la spec y lo que hace el código. Los requisitos sin entrada no tienen incoherencias detectadas.
+
+- **R1** — La spec dice "nombre completo opcional" (`rt.md:11`), pero la API exige la clave `fullName` y solo admite `null` (`backend/app/validators/user.ts:13`); omitirla da 422 `required` [E].
+- **R2** — El escenario "Contraseña fuera de longitud" (`rt.md:37`) solo cita `password`, pero la regla también rige `passwordConfirmation` (`user.ts:16`); y "Campos obligatorios ausentes" (`rt.md:47`) omite que `fullName` también es obligatorio (`user.ts:13`).
+- **R3** — La spec habla de "las dos primeras palabras" (`rt.md:56`), pero el código separa por un único espacio: "Ada  Lovelace" da "AD" y " Ada" da cadena vacía (`backend/app/models/user.ts:12`) [E].
+- **R4** — Sin incoherencias.
+- **R5** — Sin incoherencias.
+- **R6** — Sin incoherencias.
+- **R7** — Sin incoherencias.
+- **R8** — Sin incoherencias.
+- **R9** — Sin incoherencias.
+- **R10** — Sin incoherencias.
+- **R11** — Sin incoherencias.
+- **R12** — Sin incoherencias.
+- **R13** — Sin incoherencias.
+- **R14** — El ejemplo "1 de noviembre de 2026" (`rt.md`, escenario "Usuario con nombre") depende de la zona horaria del navegador: el formateador no fija zona (`frontend/src/pages/profile-page.tsx:13-15`), así que cerca de medianoche UTC puede mostrarse otro día.
+- **R15** — El escenario "Cierre normal" (`rt.md:249`) dice que el botón muestra "Cerrando sesión…", pero `logout` limpia la sesión de forma síncrona (`auth-provider.tsx:102`) en el mismo evento que activa ese texto (`profile-page.tsx:25`), y la ruta protegida redirige al login antes de que se pinte. Deducido por lectura; no probado en navegador.
+- **R16** — Sin incoherencias.
+- **R17** — Los escenarios "Sesión guardada rechazada" (`rt.md:292`) y "Servidor inaccesible al restaurar" (`rt.md:297`) dicen que se ve el aviso en la pantalla de inicio de sesión, pero si la persona abre `/register` se queda ahí y la pantalla de registro no pinta ese aviso (`frontend/src/pages/register-page.tsx`, sin uso del aviso de sesión); además, un error 5xx durante la restauración muestra "Algo ha ido mal en el servidor…", caso no recogido en la spec (`auth-provider.tsx:69-73`).
+
+## 3. Comportamientos que no supe clasificar como bug o contrato
+
+**3.1 El email distingue mayúsculas y minúsculas.**
+- *Es un bug* si se espera que `Ana@x.com` y `ana@x.com` sean la misma cuenta: hoy podrían registrarse las dos, y alguien que escriba su email con otra capitalización no podrá entrar.
+- *Es contrato* si se decidió tratar el email tal cual se escribe.
+- *Por qué el código no lo aclara:* no hay normalización del email ni en el validador ni en el modelo, y la regla de unicidad admite una opción `caseInsensitive` (`node_modules/@adonisjs/lucid/build/src/bindings/vinejs.js:42`) que aquí no se usa; no hay comentario ni prueba que diga si fue una decisión o un olvido. No lo probé contra la base de datos real: la conclusión sobre SQLite sale de leer el código.
+
+**3.2 El cierre de sesión responde sin el envoltorio `data` y en inglés.**
+- *Es un bug* si la convención es que toda respuesta lleve `{ data: ... }` y los textos estén en castellano: es la única que rompe ambas cosas.
+- *Es contrato* si se pretendía un acuse sin datos; el proyecto prevé respuestas sin envoltorio.
+- *Por qué el código no lo aclara:* el frontend descarta el cuerpo del logout (`frontend/src/lib/api.ts:162-166`), así que nada depende de la forma, y ningún comentario explica la elección.
+
+**3.3 Los tokens no caducan y se acumulan.**
+- *Es un bug* (o carencia de seguridad) si se espera que una sesión olvidada deje de valer: cada login añade un token que vale indefinidamente y el cierre de sesión solo revoca el usado.
+- *Es contrato* si se aceptó así para la práctica o para clientes que no reinician sesión.
+- *Por qué el código no lo aclara:* el proveedor admite caducidad, pero no se configura (`backend/app/models/user.ts:7`); la ausencia de configuración es idéntica tanto si se decidió como si no.
+
+**3.4 La contraseña no puede superar los 32 caracteres.**
+- *Es un bug* si se quiere admitir frases de contraseña largas: el tope impide gestores de contraseñas con claves largas y no es necesario al guardar un hash.
+- *Es contrato* si es un límite de producto deliberado (la pantalla lo anuncia: "Entre 8 y 32 caracteres.").
+- *Por qué el código no lo aclara:* el límite está duplicado de forma coherente en backend y frontend, lo que apunta a decisión, pero no hay documento de requisitos ni comentario que lo justifique; el PRD no se consultó para este análisis.

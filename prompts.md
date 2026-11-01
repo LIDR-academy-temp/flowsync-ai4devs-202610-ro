@@ -1,35 +1,112 @@
 # Prompts
 
-Aquí van **todos los prompts que lanzaste** para hacer el ejercicio, en el orden en que los
-lanzaste, con el modelo y la herramienta de cada uno.
-
-Esto no es papeleo. Lo que se revisa es **cómo pediste las cosas**, no solo lo que salió: un
-resultado flojo con un prompt bueno y un resultado flojo con un prompt vago necesitan feedback
-distinto, y sin este archivo no se distinguen.
-
-## Cómo rellenarlo
-
-- Un apartado `## Prompt N` por cada prompt.
-- **Pega el prompt tal cual lo lanzaste**, dentro del bloque de código, aunque ocupe diez líneas
-  y aunque tenga faltas. No lo reescribas para que quede bien: el que arreglaste mentalmente
-  después no es el que lanzaste.
-- Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
-- `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
-
-Borra el ejemplo de abajo cuando escribas el primero.
-
 ---
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Opus 5.5 with medium effort
+
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
+Escribe la spec de lo que el sistema hace actualmente y déjala en un archivo 
+versionado del proyecto en docs/spec-viva/rt.md (si no existe, crealo). 
+Considera el backend y frontend, pero solo el módulo de cuentas y 
+acceso, No cosnideres otras funcionalidades. Documenta lo que ocurre en la API y
+lo que ve el usuario en pantalla. No amplíes el alcance
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+Sigue este formato obligatorio:
+- ## Purpose: una o dos frases que expliquen para qué existe esta capability.
+- ## Requirements: sección que contiene los requisitos, cada uno encabezado 
+por ### Requirement: y redactado con SHALL para indicar lo que debe hacer el 
+sistema.
+ #### Scenario:: al menos uno por requisito, con dos viñetas: **WHEN***. 
+Incluye las precondiciones dentro de WHEN, sin utilizar GIVEN.
+- Idioma: español, excepto las palabras clave de la RFC.
+
+Respeta estas tres reglas:
+1) No utilices ADDED, MODIFIED ni REMOVED. Son secciones propias de una 
+especificación de cambios (delta). En este ejercicio nos centramos en documentar 
+el comportamiento actual del sistema.
+2) Describe solo comportamientos observables desde fuera. No incluyas nombres de 
+clases, archivos ni rutas del código. En la API, describe peticiones y 
+respuestas; en el frontend, lo que el usuario ve y puede hacer.
+3) No modifiques el código. Aunque encuentres errores o inconsistencias, déjalos 
+tal como están.
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** Hizo demasiado. Además de la tarea, realizó el commit e intento 
+hacer push al main del repo de LIDR. 
+
+---
+
+## Prompt 2
+
+**Modelo:** Opus 5.5 with medium effort
+
+**Herramienta:** Claude Code
+
+```
+no realices el PR ni el push!
+
+```
+
+**Qué salió:**  Disculpa y resumen lo que había realizado. Guarda en memoria que
+en este repo no haga push ni abra PRs salvo que le pida, aunque CLAUDE.md diga 
+lo contrario. 
+
+---
+
+## Prompt 2
+
+**Modelo:** Sonnet 5.5 with medium effort
+**Herramienta:** Claude Code
+
+```
+No deshagas nada, estamos en una práctica. Dime cuantos requisitos escribiste.
+
+```
+
+**Qué salió:** Escribió 17 requisitos (### Requirement:) en docs/spec-viva/rt.md.
+
+---
+
+## Prompt 3
+
+**Modelo:** Sonnet 5.5 with medium effort
+
+**Herramienta:** Claude Code
+
+```
+Verifica el requisito 1 contra el código. Indicame donde se encuentra.
+
+```
+
+**Qué salió:** Un análisis detallado del requisito 1 contra el código existente.
+Un cuadro comparativo entre el requisito y el código, la impresisión.
+
+---
+
+## Prompt 4
+
+**Modelo:** Sonnet 5.5 with medium effort
+
+**Herramienta:** Claude Code
+
+```
+Realiza el análisis de todos los requisitos generados vs el código existente. Agrega al archivo de spec (docs/spec-viva/rt.md) un título que diga "Parte B". Incia indicando el número de requisitos generados y a continuación genera 3 secciones:
+1. Requisitos generados y comprobados: Indica cuántos requisitos escribiste y 
+los que comprobaste. Para cada requisito genera el cuadro de req  y su ubicación
+en código con la lista de comprobación.
+2. Incoherencia detectadas: Para cada requisito anota cada inconsistencia en una
+línea e indica dónde aparece.
+3. Comportamientos que no supiste clasificar como bug o contrato: Incluye al 
+menos un caso en el que hayas encontrado un comportamiento y no tengas claro si 
+es un error o si el sistema está diseñado para funcionar así. 
+Explica brevemente las dos posibilidades y por qué el código no permite 
+saber cuál es la correcta.
+
+```
+
+**Qué salió:** Genero la parte B de la tarea, detallando las incosnsitencias y 
+halló 4 comportamientos que no supo clasificar como bug o contrato.
