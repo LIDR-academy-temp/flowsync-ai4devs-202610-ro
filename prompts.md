@@ -16,20 +16,42 @@ distinto, y sin este archivo no se distinguen.
 - Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
 - `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
 
-Borra el ejemplo de abajo cuando escribas el primero.
-
 ---
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Opus 5.5
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
+Escribe las especificaciones en el fichero que ya existe "/docs/spec-viva/XHM.md" en caso contrario, avisame.
+Las reglas son las sigguientes y no te puedes salir de ellas:
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+R.1) En las especificaciones centrate solo en "Cuentas y acceso" (Registro / Inicio de sesion / Sesion / Perfil) no incluyas ningun modulo mas.
+R.2) Lo que pasa por la API y lo que se ve en pantalla. Solo comportamiento observable. En la API, observable es la peticion y la respuesta. En Pantalla, observable es lo que un usuario ve y puede hacer.
+R.3) No quiero nombres de clase, archivos ni rutas, ni codigo. Centrate en la especificacion
+R.4) No propongas modificar ningun fichero ni crear ficheros nuevos.
+
+
+El formato del fichero tiene que ser el siguiente.
+F.1) Arriba, Un ## Purpose de 1 o 2 frases: Para que existe esta capability
+F.2) Debajo, ## Requirements, y colgando de el ### Requirement: En los que el sistema SHALL hacer algo.
+F.3) Bajo cada requisito, al menos un #### Scenario: de cuatro almohadillas, con dos viñetas - **WHEN** y - **THEN**. NO hay casilla para el GIVEN: La precondicion se mete dentro del WHEN.
+F.4) En castellano salvo las mayusculas de la RFC.
+F.5) Nada de ADDED, MODIFIED ni REMOVED.
+
+Si algo no te queda claro, pregunta antes de hacer nada.
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** Leyó el código del backend y del frontend y escribió la spec en `docs/spec-viva/XHM.md` (9 requisitos con sus escenarios) sin preguntar nada. Después se activó el modo plan para el commit, el PR y la revisión adversarial que pide el CLAUDE.md. Rechacé esa aprobación, así que no hay commit ni PR.
+
+## Prompt 2
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```
+Revisa el fichero prompts.md y escribe la conversacion mantenida en esta sesion en este fichero siguiendo las instrucciones indicadas en el mismo fichero
+```
+
+**Qué salió:** Registró los prompts de la sesión en este fichero y quitó el ejemplo de plantilla.
