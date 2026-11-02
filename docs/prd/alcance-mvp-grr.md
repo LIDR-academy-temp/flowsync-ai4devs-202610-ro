@@ -121,9 +121,8 @@ Cada exclusión indica qué hipótesis no ayuda a validar.
 
 1. **Los dos números.** La IA propuso 8 elementos dentro del alcance. Tras mi recorte quedaron 7.
 
-2. **Tres cosas que dejé fuera, y por qué.**
-   - **Marcar las tareas vencidas.** El retraso habla del plazo, no de quién está en qué, así que no valida H1, H2 ni H3. Es seguimiento de plazos, justo lo que el producto deja atrás al renunciar a Jira.
-   - **Resumen de lo que cambió desde tu última visita.** H1 se puede validar con la lista viva y la fecha de la última actualización. Si con eso el equipo sigue preguntando "¿en qué estás?", el resumen pasa a ser la siguiente hipótesis. Hoy no lo es.
+2. **Dos cosas que dejé fuera, y por qué.**
+   - **Marcar las tareas vencidas.** El retraso habla del plazo, no de quién está en qué, así que no valida H1, H2 ni H3. Es seguimiento de plazos, justo lo que el producto deja atrás al renunciar a Jira, por eso lo dejamos fuera del MVP.
    - **Invitaciones y control de acceso.** Con un solo equipo, en un caso de estudio y con roles planos, restringir quién entra no cambia si la ronda de la daily desaparece (H1) ni si el estado se mantiene fresco (H2). Queda anotado como riesgo, no se construye.
 
 3. **La exclusión de la que menos seguro estoy: las tareas vencidas.** Se contradicen dos cosas. La ficha pide la fecha *"para ver de un vistazo qué se ha pasado de plazo"*. Pero ninguna de las tres hipótesis necesita esa fecha: se validan con el estado y el responsable. Al sacar la marca de vencida, la fecha se queda en la lista sin un propósito claro. Entraría si en la primera semana el equipo sigue preguntando "¿para cuándo está esto?" en la daily, porque entonces el plazo sí formaría parte de la ronda que queremos eliminar.
