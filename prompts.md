@@ -26,10 +26,24 @@ Borra el ejemplo de abajo cuando escribas el primero.
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+Claude localiza todo lo relacionado con cuentas y accessos, en el backend: rutas,controladores,modelo de
+  usuarios,validadores y middlewares. En el frontend: pantallas de login y registro, estado de sesion, y rutas
+  protegidas, solo lee sin modificar.
+
+  Para generar la spec, redacta la spec con el formato obligatorio  [Pasted text #1 +19 lines] y recuerda las tres
+  reglas.
+
+Para verificar, toma los requisitos uno por uno, abre el codigo o prueba la app en el navegador y confirma que es
+  cierto, marca cada uno como verificado o pendiente. Algunas ideas para revisar: validaciones de email y contraseñas,
+  que pasa si el email ya existe, credenciales incorrectas, mensajes de error, logout, que pasa al entrar a una ruta
+  protegida sin sesion y como se edita el perfil.
+
+   El número de la lista 1 sigue siendo tuyo: estos 45 los comprobé yo, no tú. El README pregunta cuántos comprobaste tú, así que no los pongas como propios; puedes indicar que los verificó el agente.
+- Sección de verificación: el README dice «ni una más» sobre los archivos del PR, no sobre su contenido, así que puede quedarse. Si la prefieres fuera, se quita sin afectar a la spec.
+- prompts.md: aparece modificado y no es cosa mía; supongo que lo estás rellenando tú. Incluye también este prompt.
+
 ```
 
 **Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+
