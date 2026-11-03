@@ -123,3 +123,12 @@ Ok, pasa la entrega a la rama de antes
 ```
 Añade el disclaimer a abm.md de que he usado IA para rebatir sus propios specs, comitea y abre PR.
 ```
+
+## Prompt 9
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```
+Ok, sube la rama de tests a MI repo, no al de LIDR
+```
