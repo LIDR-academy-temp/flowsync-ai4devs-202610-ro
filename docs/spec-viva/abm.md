@@ -66,7 +66,7 @@ El sistema SHALL impedir que se registre un email que coincida exactamente con e
 
 ### Requirement: Normalización de textos de entrada
 
-El sistema SHALL eliminar los espacios iniciales y finales de cada texto del cuerpo de las peticiones de registro e inicio de sesión, y SHALL tratar como `null` el texto que quede vacío.
+El sistema SHALL eliminar los espacios iniciales y finales de `fullName`, `email` y `password` al registrarse, y SHALL tratar como `null` el texto que quede vacío en `fullName` al registrarse y en `email` y `password` al iniciar sesión.
 
 #### Scenario: Email con espacios alrededor
 - **WHEN** un cliente envía un `email` válido con espacios al principio o al final
@@ -77,8 +77,8 @@ El sistema SHALL eliminar los espacios iniciales y finales de cada texto del cue
 - **THEN** la API responde 200 y `data.user.fullName` es `null`
 
 #### Scenario: Campo obligatorio en blanco
-- **WHEN** un cliente envía `email` o `password` vacíos o formados solo por espacios
-- **THEN** la API responde 422 con `rule` igual a `required` para ese campo
+- **WHEN** un cliente inicia sesión con `email` y `password` vacíos o formados solo por espacios
+- **THEN** la API responde 422 con `rule` igual a `required` para ambos campos
 
 #### Scenario: Contraseña con espacios alrededor
 - **WHEN** una cuenta se registró con una contraseña rodeada de espacios y un cliente inicia sesión con la misma contraseña sin esos espacios
@@ -138,7 +138,7 @@ El sistema SHALL rechazar con 422 un inicio de sesión cuyo email no sea válido
 
 ### Requirement: Respuestas de error en JSON
 
-El sistema SHALL responder con errores en formato JSON sea cual sea la cabecera `Accept` de la petición.
+El sistema SHALL responder en formato JSON a un registro no válido aunque la cabecera `Accept` pida HTML, y a los errores internos no controlados.
 
 #### Scenario: Cliente que pide HTML
 - **WHEN** un cliente envía `Accept: text/html` en un registro no válido
@@ -254,7 +254,7 @@ La aplicación SHALL mostrar solo un indicador de carga mientras comprueba una s
 
 #### Scenario: Carga con sesión guardada
 - **WHEN** una persona abre `/login`, `/register` o `/profile` con una sesión guardada en el navegador y el servidor aún no ha respondido
-- **THEN** ve un indicador giratorio, con el texto `Cargando…` disponible para lectores de pantalla, y no ve formularios ni perfil
+- **THEN** ve un indicador de estado con el texto `Cargando…`, y no ve formularios ni perfil
 
 ### Requirement: Pantalla de inicio de sesión
 
@@ -487,7 +487,7 @@ La aplicación SHALL comprobar una sesión guardada solo al cargar, y SHALL NOT 
 ### 1. Requisitos escritos por el agente y comprobados en el código
 
 - Escritos por el agente: 31
-- Comprobados: 31, mediante tests
+- Comprobados por mí abriendo el código: 0
 
 ### 2. Incoherencias que aparecieron al escribirla
 
@@ -501,7 +501,7 @@ La aplicación SHALL comprobar una sesión guardada solo al cargar, y SHALL NOT 
 - Unos errores de campo empiezan en mayúscula y otros en minúscula: `frontend/src/lib/api.ts:59` frente a `frontend/src/lib/api.ts:61`.
 - `Cerrando sesión…` no llega a verse, porque la pantalla redirige antes: `frontend/src/pages/profile-page.tsx:67`.
 - El login promete `volver a tus tareas` y lleva al perfil: `frontend/src/pages/login-page.tsx:33`.
-- El PRD pide crear la cuenta con nombre y la pantalla lo marca como opcional: `docs/prd/flowsync-mvp.md:150` frente a `frontend/src/pages/register-page.tsx:64`.
+- El PRD pide crear la cuenta con nombre y la pantalla lo marca como opcional: `docs/prd/flowsync-mvp.md:150` frente a `frontend/src/pages/register-page.tsx:65`.
 - `.env.example` ofrece `CORS_ORIGIN` y la configuración no lo lee: `backend/.env.example:18` frente a `backend/config/cors.ts`.
 
 ### 3. Lo que no supe decidir si era un bug o el contrato
