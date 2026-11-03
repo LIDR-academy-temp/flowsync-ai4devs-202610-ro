@@ -482,6 +482,8 @@ La aplicación SHALL comprobar una sesión guardada solo al cargar, y SHALL NOT 
 
 ## Parte B: las tres listas
 
+> **Uso de IA:** he usado IA para rebatir sus propios specs. Un agente escribió la spec y otro agente de IA escribió los tests que la pusieron a prueba y redactó estas listas. No comprobé los requisitos a mano.
+
 ### 1. Requisitos escritos por el agente y comprobados en el código
 
 - Escritos por el agente: 31

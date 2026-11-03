@@ -114,3 +114,12 @@ Commitea tests
 ```
 Ok, pasa la entrega a la rama de antes
 ```
+
+## Prompt 8
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```
+Añade el disclaimer a abm.md de que he usado IA para rebatir sus propios specs, comitea y abre PR.
+```
