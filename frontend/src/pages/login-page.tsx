@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { AlertCircleIcon } from 'lucide-react'
+import { AlertCircleIcon, CircleCheckIcon } from 'lucide-react'
 import { useAuth } from '@/auth/use-auth'
 import { useAuthForm } from '@/auth/use-auth-form'
 import { AuthLayout } from '@/components/auth-layout'
@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label'
 const FIELDS = ['email', 'password'] as const
 
 export function LoginPage() {
-  const { login, sessionError } = useAuth()
+  const { login, sessionError, accountCreated } = useAuth()
   const { isSubmitting, formError, fieldErrors, submit } = useAuthForm(FIELDS)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -37,6 +37,15 @@ export function LoginPage() {
           <Alert variant="destructive">
             <AlertCircleIcon />
             <AlertDescription>{alertMessage}</AlertDescription>
+          </Alert>
+        )}
+
+        {!alertMessage && accountCreated && (
+          <Alert>
+            <CircleCheckIcon />
+            <AlertDescription>
+              Cuenta creada. Inicia sesión para continuar.
+            </AlertDescription>
           </Alert>
         )}
 

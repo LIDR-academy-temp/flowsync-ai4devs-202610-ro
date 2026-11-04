@@ -1,4 +1,12 @@
-import type { AuthResult, LoginPayload, SignupPayload, User } from '@/lib/types'
+import type {
+  AuthResult,
+  CreateTaskPayload,
+  LoginPayload,
+  SignupPayload,
+  Task,
+  UpdateTaskPayload,
+  User,
+} from '@/lib/types'
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3333'
 
@@ -35,13 +43,18 @@ const FIELD_LABELS: Record<string, string> = {
   email: 'el email',
   password: 'la contraseña',
   passwordConfirmation: 'la confirmación de la contraseña',
+  title: 'el título',
+  status: 'el estado',
+  assigneeId: 'el responsable',
+  dueDate: 'la fecha de vencimiento',
 }
 
 const label = (field?: string) => FIELD_LABELS[field ?? ''] ?? 'el campo'
 
 /**
  * Traduce un error de VineJS a una frase que el usuario pueda entender.
- * Cubre todas las reglas que usa `app/validators/user.ts` en el backend.
+ * Cubre todas las reglas que usan `app/validators/user.ts` y
+ * `app/validators/task.ts` en el backend.
  */
 function translate(error: BackendError): string {
   const { rule, field, meta } = error
@@ -51,6 +64,10 @@ function translate(error: BackendError): string {
       return field === 'email'
         ? 'Ese email ya está registrado. Inicia sesión en su lugar.'
         : `Ya existe un registro con ${label(field)}.`
+    case 'date':
+      return 'Esa fecha no existe o está incompleta.'
+    case 'database.exists':
+      return `No existe ${label(field)} indicado.`
     case 'sameAs':
       return 'Las contraseñas no coinciden.'
     case 'email':
@@ -58,6 +75,8 @@ function translate(error: BackendError): string {
     case 'required':
       return `Falta rellenar ${label(field)}.`
     case 'minLength':
+      // Un mínimo de 1 es un campo sin rellenar, no una cuestión de longitud.
+      if (meta?.min === 1) return `Falta rellenar ${label(field)}.`
       return `${label(field)} debe tener al menos ${meta?.min} caracteres.`
     case 'maxLength':
       return `${label(field)} no puede superar los ${meta?.max} caracteres.`
@@ -102,7 +121,7 @@ function toApiError(status: number, body: unknown): ApiError {
 }
 
 type RequestOptions = {
-  method?: 'GET' | 'POST'
+  method?: 'GET' | 'POST' | 'PATCH'
   body?: unknown
   token?: string | null
 }
@@ -163,4 +182,54 @@ export function logout(token: string): Promise<void> {
   return request('/api/v1/account/logout', { method: 'POST', token }).then(
     () => undefined,
   )
+}
+
+/**
+ * El día de quien mira, para que el servidor dé el veredicto de vencimiento.
+ * Se calcula en cada petición: la medianoche puede pasar con la aplicación
+ * abierta. `toISOString()` no sirve aquí porque daría el día UTC.
+ */
+function localDay(): string {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
+const tasksPath = (suffix = '') => `/api/v1/tasks${suffix}?today=${localDay()}`
+
+export function listTasks(token: string): Promise<Task[]> {
+  return request<{ data: Task[] }>(tasksPath(), { token }).then(
+    (response) => response.data,
+  )
+}
+
+export function getTask(token: string, id: number): Promise<Task> {
+  return request<{ data: Task }>(tasksPath(`/${id}`), { token }).then(
+    (response) => response.data,
+  )
+}
+
+export function createTask(
+  token: string,
+  payload: CreateTaskPayload,
+): Promise<Task> {
+  return request<{ data: Task }>(tasksPath(), {
+    method: 'POST',
+    body: payload,
+    token,
+  }).then((response) => response.data)
+}
+
+export function updateTask(
+  token: string,
+  id: number,
+  payload: UpdateTaskPayload,
+): Promise<Task> {
+  return request<{ data: Task }>(tasksPath(`/${id}`), {
+    method: 'PATCH',
+    body: payload,
+    token,
+  }).then((response) => response.data)
 }

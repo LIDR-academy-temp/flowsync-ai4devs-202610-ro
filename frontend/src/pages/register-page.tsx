@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { AlertCircleIcon } from 'lucide-react'
 import { useAuth } from '@/auth/use-auth'
 import { useAuthForm } from '@/auth/use-auth-form'
@@ -19,6 +19,7 @@ const FIELDS = [
 
 export function RegisterPage() {
   const { signup } = useAuth()
+  const navigate = useNavigate()
   const { isSubmitting, formError, fieldErrors, submit, failWith } =
     useAuthForm(FIELDS)
   const [fullName, setFullName] = useState('')
@@ -36,15 +37,16 @@ export function RegisterPage() {
       return
     }
 
-    return submit(() =>
-      signup({
+    return submit(async () => {
+      await signup({
         // `fullName` es `.nullable()` en el backend: la clave viaja siempre.
         fullName: fullName.trim() || null,
         email,
         password,
         passwordConfirmation,
-      }),
-    )
+      })
+      await navigate('/login', { replace: true })
+    })
   }
 
   return (
