@@ -4,6 +4,7 @@ import { AlertCircleIcon } from 'lucide-react'
 import { useAuth } from '@/auth/use-auth'
 import { useAuthForm } from '@/auth/use-auth-form'
 import { FieldError } from '@/components/field-error'
+import { TaskDialog } from '@/components/task-dialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -43,6 +44,7 @@ type TaskRowProps = {
   task: Task
   assignees: Assignee[]
   isPending: boolean
+  onOpen: (task: Task) => void
   onStatusChange: (task: Task, status: TaskStatus) => void
   onAssigneeChange: (task: Task, assignee: Assignee) => void
 }
@@ -51,6 +53,7 @@ function TaskRow({
   task,
   assignees,
   isPending,
+  onOpen,
   onStatusChange,
   onAssigneeChange,
 }: TaskRowProps) {
@@ -65,7 +68,13 @@ function TaskRow({
 
   return (
     <li className="grid gap-3 py-4">
-      <p className="font-medium wrap-anywhere">{task.title}</p>
+      <button
+        type="button"
+        className="focus-visible:ring-ring/50 rounded-sm text-left font-medium wrap-anywhere outline-none hover:underline focus-visible:ring-[3px]"
+        onClick={() => onOpen(task)}
+      >
+        {task.title}
+      </button>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <select
@@ -118,6 +127,7 @@ export function TaskListPage() {
   const [loadError, setLoadError] = useState<string | null>(null)
   const [updateError, setUpdateError] = useState<string | null>(null)
   const [pendingIds, setPendingIds] = useState<ReadonlySet<number>>(new Set())
+  const [openTask, setOpenTask] = useState<Task | null>(null)
   const updatesSeen = useRef(0)
 
   const loadTasks = useCallback(async () => {
@@ -279,6 +289,7 @@ export function TaskListPage() {
                   task={task}
                   assignees={assignees}
                   isPending={pendingIds.has(task.id)}
+                  onOpen={setOpenTask}
                   onStatusChange={handleStatusChange}
                   onAssigneeChange={handleAssigneeChange}
                 />
@@ -287,6 +298,15 @@ export function TaskListPage() {
           )}
         </CardContent>
       </Card>
+
+      {openTask && (
+        <TaskDialog
+          key={openTask.id}
+          taskId={openTask.id}
+          title={openTask.title}
+          onClose={() => setOpenTask(null)}
+        />
+      )}
     </div>
   )
 }

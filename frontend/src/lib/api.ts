@@ -46,6 +46,7 @@ const FIELD_LABELS: Record<string, string> = {
   title: 'el título',
   status: 'el estado',
   assigneeId: 'el responsable',
+  dueDate: 'la fecha de vencimiento',
 }
 
 const label = (field?: string) => FIELD_LABELS[field ?? ''] ?? 'el campo'
@@ -63,6 +64,8 @@ function translate(error: BackendError): string {
       return field === 'email'
         ? 'Ese email ya está registrado. Inicia sesión en su lugar.'
         : `Ya existe un registro con ${label(field)}.`
+    case 'date':
+      return 'Esa fecha no existe o está incompleta.'
     case 'database.exists':
       return `No existe ${label(field)} indicado.`
     case 'sameAs':
@@ -181,8 +184,29 @@ export function logout(token: string): Promise<void> {
   )
 }
 
+/**
+ * El día de quien mira, para que el servidor dé el veredicto de vencimiento.
+ * Se calcula en cada petición: la medianoche puede pasar con la aplicación
+ * abierta. `toISOString()` no sirve aquí porque daría el día UTC.
+ */
+function localDay(): string {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
+const tasksPath = (suffix = '') => `/api/v1/tasks${suffix}?today=${localDay()}`
+
 export function listTasks(token: string): Promise<Task[]> {
-  return request<{ data: Task[] }>('/api/v1/tasks', { token }).then(
+  return request<{ data: Task[] }>(tasksPath(), { token }).then(
+    (response) => response.data,
+  )
+}
+
+export function getTask(token: string, id: number): Promise<Task> {
+  return request<{ data: Task }>(tasksPath(`/${id}`), { token }).then(
     (response) => response.data,
   )
 }
@@ -191,7 +215,7 @@ export function createTask(
   token: string,
   payload: CreateTaskPayload,
 ): Promise<Task> {
-  return request<{ data: Task }>('/api/v1/tasks', {
+  return request<{ data: Task }>(tasksPath(), {
     method: 'POST',
     body: payload,
     token,
@@ -203,7 +227,7 @@ export function updateTask(
   id: number,
   payload: UpdateTaskPayload,
 ): Promise<Task> {
-  return request<{ data: Task }>(`/api/v1/tasks/${id}`, {
+  return request<{ data: Task }>(tasksPath(`/${id}`), {
     method: 'PATCH',
     body: payload,
     token,
