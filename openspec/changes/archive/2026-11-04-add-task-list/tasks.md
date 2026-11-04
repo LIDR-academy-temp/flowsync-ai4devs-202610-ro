@@ -32,9 +32,9 @@
 
 ## 5. Comprobación de conjunto
 
-- [ ] 5.1 Recorrer el flujo completo con dos cuentas en el navegador, una con nombre y otra sin él: las dos ven la misma lista, cada una cambia estado y responsable de tareas de la otra, y tras recargar los cambios persisten
-- [ ] 5.2 Confirmar con `git diff` que `package.json` y `package-lock.json` no cambian, que no se añade ningún fichero de test, que `components/ui/` queda intacto y que no aparece vencimiento en código ni en respuestas
-- [ ] 5.3 Ejecutar `openspec validate add-task-list --strict` y confirmar que pasa
+- [x] 5.1 Recorrer el flujo completo con dos cuentas en el navegador, una con nombre y otra sin él: las dos ven la misma lista, cada una cambia estado y responsable de tareas de la otra, y tras recargar los cambios persisten
+- [x] 5.2 Confirmar con `git diff` que `package.json` y `package-lock.json` no cambian, que no se añade ningún fichero de test, que `components/ui/` queda intacto y que no aparece vencimiento en código ni en respuestas
+- [x] 5.3 Ejecutar `openspec validate add-task-list --strict` y confirmar que pasa
 
 ## Workflow follow-up
 

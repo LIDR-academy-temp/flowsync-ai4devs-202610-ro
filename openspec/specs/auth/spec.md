@@ -233,11 +233,11 @@ La aplicación web SHALL ofrecer en `/register` un formulario "Crea tu cuenta" c
 #### Scenario: Registro correcto
 
 - **WHEN** una persona rellena el formulario con datos válidos y pulsa "Crear cuenta"
-- **THEN** queda con la sesión iniciada y ve la pantalla de perfil
+- **THEN** se crea la cuenta, sigue sin sesión iniciada y ve la pantalla de inicio de sesión con el aviso "Cuenta creada. Inicia sesión para continuar."
 
 #### Scenario: Nombre en blanco
 
-- **WHEN** una persona se registra dejando el nombre vacío o solo con espacios
+- **WHEN** una persona se registra dejando el nombre vacío o solo con espacios y después inicia sesión
 - **THEN** su perfil muestra "Sin nombre"
 
 #### Scenario: Contraseñas distintas
@@ -282,7 +282,7 @@ La aplicación web SHALL ofrecer en `/login` un formulario "Inicia sesión" con 
 #### Scenario: Credenciales correctas
 
 - **WHEN** una persona introduce credenciales correctas y pulsa "Entrar"
-- **THEN** queda con la sesión iniciada y ve la pantalla de perfil
+- **THEN** queda con la sesión iniciada y ve la lista de tareas
 
 #### Scenario: Credenciales incorrectas
 
@@ -303,6 +303,16 @@ La aplicación web SHALL ofrecer en `/login` un formulario "Inicia sesión" con 
 
 - **WHEN** una persona ha pulsado "Entrar" y el servidor aún no ha respondido
 - **THEN** el botón muestra "Entrando…" y está deshabilitado
+
+#### Scenario: Aviso de cuenta creada tras un intento fallido
+
+- **WHEN** hay un aviso de cuenta creada y un intento de inicio de sesión falla por credenciales incorrectas
+- **THEN** la persona ve el aviso de credenciales en lugar del de cuenta creada
+
+#### Scenario: Recarga con el aviso de cuenta creada
+
+- **WHEN** la persona recarga la página después de ver el aviso de cuenta creada
+- **THEN** ve la pantalla de inicio de sesión sin ese aviso
 
 ### Requirement: Fallos de comunicación en los formularios de acceso
 
@@ -398,8 +408,8 @@ La aplicación web SHALL permitir ver el perfil solo con sesión iniciada, y las
 
 #### Scenario: Destino tras identificarse
 
-- **WHEN** una persona sin sesión abre cualquier dirección protegida o desconocida y después se identifica
-- **THEN** llega siempre a `/profile`
+- **WHEN** una persona sin sesión abre cualquier dirección protegida o desconocida y después inicia sesión
+- **THEN** llega siempre a `/tasks`
 
 ### Requirement: Pantalla de perfil
 
