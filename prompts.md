@@ -263,3 +263,128 @@ me gustaría hacer un commit ahora para despues ejecutar openspec archive add-ta
 ```
 haz un commit de los ficheros de open spec y los promts y un push para poder verlo en la web de github
 ```
+
+## Prompt 19
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+/opsx:propose
+Añade la fecha de vencimiento y las tareas vencidas, según
+@docs/backlog/E2-gestion-tareas/us-fechas-vencimiento.md.
+Léela entera. Llama al change exactamente
+`add-task-due-date`.
+Backend y frontend, SIN TESTS.La fecha es de calendario, sin hora: una tarea cuya fecha es HOY todavía no está vencida, lo estará mañana.Seis restricciones que NO son negociables, aunque no me preguntes por ellas:1. Una tarea está vencida si se cumplen las TRES a la vez: tiene fecha, esa fecha es anterior a hoy, y su estado NO es `done`. Sin fecha no se vence nunca, y una tarea en `done` nunca está vencida por antigua que sea su fecha.2. Ese veredicto lo da el BACKEND, y la API lo expone como un campo booleano `isOverdue` en la representación de una tarea. NO lo resuelva el frontend por su cuenta. Si para respetar el huso horario de cada persona necesitas su día, que el cliente lo mande y el servidor devuelva el veredicto; lo que no vale es que la API no diga si una tarea está vencida.3. `isOverdue` NO se persiste en ninguna columna: se calcula en cada lectura. Nada de jobs ni de procesos que marquen tareas por la noche. Y el cliente no puede enviarlo: si lo envía, se ignora.4. Se acepta poner una fecha anterior a hoy, al crear y al actualizar: registrar algo que ya llega tarde es legítimo, nace vencida y no se rechaza. La fecha se puede poner, cambiar y quitar, y quitarla se hace enviándola explícitamente vacía.5. La historia dice "al abrir la tarea" y ese endpoint no existe todavía. Este change añade la lectura individual de una tarea, que es la superficie mínima que la historia necesita, y lo anota como decisión en el design con su punto abierto. La pantalla de detalle completa NO entra.6. La LISTA no cambia lo que muestra: sigue con título, responsable y estado, sin fecha y sin marca de vencida en pantalla.Fuera de alcance: notificaciones, recordatorios, recurrencia, ordenar o filtrar por fecha, y tests de cualquier tipo.Y antes de escribir, pregúntame lo que de verdad cambie el alcance o el comportamiento observable./opsx:propose
+Añade la fecha de vencimiento y las tareas vencidas, según
+@docs/backlog/E2-gestion-tareas/us-fechas-vencimiento.md.
+Léela entera. Llama al change exactamente
+`add-task-due-date`.
+Backend y frontend, SIN TESTS.La fecha es de calendario, sin hora: una tarea cuya fecha es HOY todavía no está vencida, lo estará mañana.Seis restricciones que NO son negociables, aunque no me preguntes por ellas:1. Una tarea está vencida si se cumplen las TRES a la vez: tiene fecha, esa fecha es anterior a hoy, y su estado NO es `done`. Sin fecha no se vence nunca, y una tarea en `done` nunca está vencida por antigua que sea su fecha.2. Ese veredicto lo da el BACKEND, y la API lo expone como un campo booleano `isOverdue` en la representación de una tarea. NO lo resuelva el frontend por su cuenta. Si para respetar el huso horario de cada persona necesitas su día, que el cliente lo mande y el servidor devuelva el veredicto; lo que no vale es que la API no diga si una tarea está vencida.3. `isOverdue` NO se persiste en ninguna columna: se calcula en cada lectura. Nada de jobs ni de procesos que marquen tareas por la noche. Y el cliente no puede enviarlo: si lo envía, se ignora.4. Se acepta poner una fecha anterior a hoy, al crear y al actualizar: registrar algo que ya llega tarde es legítimo, nace vencida y no se rechaza. La fecha se puede poner, cambiar y quitar, y quitarla se hace enviándola explícitamente vacía.5. La historia dice "al abrir la tarea" y ese endpoint no existe todavía. Este change añade la lectura individual de una tarea, que es la superficie mínima que la historia necesita, y lo anota como decisión en el design con su punto abierto. La pantalla de detalle completa NO entra.6. La LISTA no cambia lo que muestra: sigue con título, responsable y estado, sin fecha y sin marca de vencida en pantalla.Fuera de alcance: notificaciones, recordatorios, recurrencia, ordenar o filtrar por fecha, y tests de cualquier tipo.Y antes de escribir, pregúntame lo que de verdad cambie el alcance o el comportamiento observable.
+```
+
+## Prompt 20
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+Abre el design.md de este change y dime, de las decisiones técnicas que has tomado, cuál es la que más te ha costado y qué alternativa descartaste para quedarte con ella. Defiende tu elección frente a esa alternativa con consecuencias concretas sobre esta spec: qué escenario del delta se rompería con cada una. Si sigues pensando que tu decisión es la buena, no cambies nada.
+```
+
+## Prompt 21
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+
+
+<pasted_content id="4cff">
+/opsx:apply
+add-task-due-date
+Seguimos en la misma rama: no crees una rama nueva, no abras PR y no lances el subagente
+adversarial-reviewer.
+</pasted_content id="4cff">
+
+```
+
+## Prompt 22
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+<task-notification>
+<task-id>bq1mbfwht</task-id>
+<tool-use-id>toolu_01H48vVtuNvp1JYPA58qXexs</tool-use-id>
+<output-file>/tmp/claude-1000/-home-edaza-AI4Devs-s3-flowsync-ai4devs-202610-ro/3c4e7945-6445-4d33-9181-eea2fa1ea42b/tasks/bq1mbfwht.output</output-file>
+<status>failed</status>
+<summary>Background command "Remove redundant date conversion and start backend server" failed with exit code 1</summary>
+</task-notification>
+```
+
+## Prompt 23
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+Haz un commit de esto
+```
+
+## Prompt 24
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+yo quiero commitear todo de openspec para ver las diferencias
+```
+
+## Prompt 25
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+/opsx:archive add-task-due-date
+```
+
+## Prompt 26
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+No veo la forma de poner la fecha de dueDate
+```
+
+## Prompt 27
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+Funciona, por eso quiero que ejecutes /openspec archive add-task-due-date
+```
+
+## Prompt 28
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+|git diff --stat openspec/specs/tasks/spec.md
+```
+
+## Prompt 29
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+Da la tarea por cerrada siguiendo las reglas de proceso de CLAUDE.md: commitea, abre el PR y pasa el subagente
+adversarial-reviewer
+sobre todo el trabajo de esta rama.
+```
