@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { useAuth } from '@/auth/use-auth'
 import { Button } from '@/components/ui/button'
 import {
@@ -57,7 +58,7 @@ export function ProfilePage() {
           </dl>
         </CardContent>
 
-        <CardFooter>
+        <CardFooter className="flex-col gap-4">
           <Button
             variant="outline"
             className="w-full"
@@ -66,6 +67,12 @@ export function ProfilePage() {
           >
             {isLoggingOut ? 'Cerrando sesión…' : 'Cerrar sesión'}
           </Button>
+          <Link
+            to="/tasks"
+            className="text-foreground text-sm font-medium underline"
+          >
+            Ver la lista de tareas
+          </Link>
         </CardFooter>
       </Card>
     </div>

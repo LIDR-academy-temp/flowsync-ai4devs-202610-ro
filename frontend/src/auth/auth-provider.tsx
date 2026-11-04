@@ -5,6 +5,7 @@ import type { AuthResult, LoginPayload, SignupPayload, User } from '@/lib/types'
 import { AuthContext, type AuthStatus } from '@/auth/auth-context'
 
 const TOKEN_KEY = 'flowsync.token'
+const DEFAULT_LANDING_PATH = '/profile'
 
 const readStoredToken = () => localStorage.getItem(TOKEN_KEY)
 
@@ -19,12 +20,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Por qué se cayó una sesión que ya existía. Se pinta en el login para que
   // nadie acabe ahí sin saber por qué.
   const [sessionError, setSessionError] = useState<string | null>(null)
+  // En memoria, igual que `sessionError`: el aviso no sobrevive a una recarga.
+  const [accountCreated, setAccountCreated] = useState(false)
+  const [landingPath, setLandingPath] = useState(DEFAULT_LANDING_PATH)
 
   const clearSession = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY)
     setToken(null)
     setUser(null)
     setStatus('anonymous')
+    setLandingPath(DEFAULT_LANDING_PATH)
   }, [])
 
   const startSession = useCallback(
@@ -34,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(nextUser)
       setStatus('authenticated')
       setSessionError(null)
+      setAccountCreated(false)
     },
     [],
   )
@@ -83,16 +89,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(
     async (payload: LoginPayload) => {
-      startSession(await api.login(payload))
+      const result = await api.login(payload)
+      // En la misma actualización que abre la sesión: es lo que hace que
+      // `PublicOnlyRoute` saque de /login, y tiene que saber ya a dónde.
+      setLandingPath('/tasks')
+      startSession(result)
     },
     [startSession],
   )
 
   const signup = useCallback(
     async (payload: SignupPayload) => {
-      startSession(await api.signup(payload))
+      // El registro no abre sesión en la web: el token de la respuesta se ignora
+      // y se descarta cualquiera anterior conservado tras un corte, que al
+      // recargar devolvería la sesión de otra cuenta.
+      await api.signup(payload)
+      clearSession()
+      setSessionError(null)
+      setAccountCreated(true)
     },
-    [startSession],
+    [clearSession],
   )
 
   const logout = useCallback(async () => {
@@ -107,8 +123,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [clearSession, token])
 
   const value = useMemo(
-    () => ({ user, token, status, sessionError, login, signup, logout }),
-    [user, token, status, sessionError, login, signup, logout],
+    () => ({
+      user,
+      token,
+      status,
+      sessionError,
+      accountCreated,
+      landingPath,
+      login,
+      signup,
+      logout,
+    }),
+    [
+      user,
+      token,
+      status,
+      sessionError,
+      accountCreated,
+      landingPath,
+      login,
+      signup,
+      logout,
+    ],
   )
 
   return <AuthContext value={value}>{children}</AuthContext>

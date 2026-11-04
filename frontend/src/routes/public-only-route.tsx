@@ -4,13 +4,14 @@ import { FullScreenLoader } from '@/components/full-screen-loader'
 
 /**
  * El espejo de `ProtectedRoute`: con sesión activa, login y registro no tienen
- * sentido y se rebota al perfil.
+ * sentido. Se rebota a la lista si se acaba de iniciar sesión y al perfil en el
+ * resto de casos.
  */
 export function PublicOnlyRoute() {
-  const { status } = useAuth()
+  const { status, landingPath } = useAuth()
 
   if (status === 'loading') return <FullScreenLoader />
-  if (status === 'authenticated') return <Navigate to="/profile" replace />
+  if (status === 'authenticated') return <Navigate to={landingPath} replace />
 
   return <Outlet />
 }

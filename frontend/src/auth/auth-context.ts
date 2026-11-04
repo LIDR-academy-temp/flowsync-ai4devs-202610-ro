@@ -9,6 +9,10 @@ export type AuthContextValue = {
   status: AuthStatus
   /** Motivo por el que se perdió una sesión previa, para poder explicarlo. */
   sessionError: string | null
+  /** Se acaba de crear una cuenta y falta iniciar sesión con ella. */
+  accountCreated: boolean
+  /** A dónde lleva `PublicOnlyRoute` a quien ya tiene sesión. */
+  landingPath: string
   login: (payload: LoginPayload) => Promise<void>
   signup: (payload: SignupPayload) => Promise<void>
   logout: () => Promise<void>
