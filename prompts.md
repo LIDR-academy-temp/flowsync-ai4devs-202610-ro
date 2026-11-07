@@ -22,14 +22,47 @@ Borra el ejemplo de abajo cuando escribas el primero.
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Sonnet 4.6
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
+Trabajá SOLO sobre el requisito "Lo que cada tarea muestra de su responsable" de openspec/specs/tasks/spec.md. No cubras otros requisitos de esa spec.
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+Armá una matriz de trazabilidad en docs/verificacion/mc.md con este formato:
+- Arriba del todo, dos números: cuántos scenarios tiene el requisito y cuántos están cubiertos (este último dejalo como "pendiente").
+- Una tabla con una fila por scenario y cuatro columnas:
+  1. El scenario en una línea (qué se espera y en qué situación).
+  2. El test que lo cubre, con el nombre exacto con el que aparece en la suite.
+  3. Estado: Cubierto, No cubierto o No lo sé.
+  4. Si es "No lo sé", qué faltó para decidirlo (media línea).
+
+Reglas:
+- Para marcar "Cubierto" tenés que abrir el test y leer lo que afirma; que el nombre se parezca no alcanza. Si el test comprueba solo una parte o algo parecido pero no igual, marcá "No lo sé" y decí por qué.
+- Todavía no escribas tests.
+- No modifiques ningún archivo fuera de docs/verificacion/.
+
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** armó la matriz con 3 scenarios, todos No cubierto
+
+## Prompt 2
+
+**Modelo:** Sonnet 4.6
+**Herramienta:** Claude Code
+
+```
+Ahora escribí los tests que faltan para las filas en "No cubierto" de docs/verificacion/mc.md: uno por scenario.
+
+Reglas:
+- Ponelos en backend/tests/functional/tasks/, siguiendo el estilo de los tests de backend/tests/functional/auth/.
+- No modifiques nada fuera de backend/tests/ ni de docs/verificacion/.
+- Si un test sale en rojo, no lo arregles ni lo aflojes para que pase, y no toques el código de la aplicación. Dejalo en rojo y contame por qué falla.
+- Después ejecutalos con npm test desde backend/.
+
+Al final, decime: qué tests escribiste, cuáles quedaron en verde y cuáles en rojo, y qué valores o casos tuviste que decidir vos porque el scenario no los especificaba (por ejemplo, un nombre concreto, un límite o qué pasa con un dato vacío).
+
+```
+
+**Qué salió:** escribió 2 tests; uno verde y uno rojo (la tarea expone el email del responsable). Le aprobé correr las migraciones porque faltaba la tabla de tareas en mi base local.
+
+**Nota:** la parte B la redacté con ayuda de Claude (chat en claude.ai), a partir de los resultados de Claude Code.
