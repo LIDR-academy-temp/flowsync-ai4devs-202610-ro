@@ -16,20 +16,39 @@ distinto, y sin este archivo no se distinguen.
 - Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
 - `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
 
-Borra el ejemplo de abajo cuando escribas el primero.
-
 ---
+
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** claude-opus-5-5
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
+Haremos una matriz de trazabilidad. A partir de tasks/spec.md, tomaremos el requisito «Lo que cada tarea muestra de su responsable» para hacer este ejercicio. Crearemos 4 columnas para ver si los tests realmente validan los escenarios.
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+
+<pasted_content id="a343">
+El scenario, en una línea. Qué se espera y en qué situación. Si no cabe en una línea, es que estás juntando dos.
+
+Qué test lo cubre, con el nombre exacto que aparece en la suite. Sin el nombre concreto, la columna va vacía: "seguro que algo lo cubre" no es una fila.
+
+Cubierto · No cubierto · No lo sé. Los tres estados son válidos, y el tercero no es un fallo: es el resultado más informativo de los tres.
+
+Si pusiste "no lo sé", qué te faltó para decidirlo. Media línea. Suele ser una de dos: no encontraste dónde se comprueba, o encontraste algo que se le parece y no dice exactamente lo mismo.
+</pasted_content id="a343">
+
+
+Las columnas 2, 3 y 4 LAS RELLENO YO, tú solo crealas.
+
+Haz esto en el archivo docs/verificacion/abm.md
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+## Prompt 2
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+Estoy haciendo un test del endpoint '/api/v1/tasks'. De momento tengo esto, pero no sé si es correcto para Get o si se corresponde a lo que pide api.ts
+```
