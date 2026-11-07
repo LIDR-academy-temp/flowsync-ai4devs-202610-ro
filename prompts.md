@@ -1,35 +1,64 @@
-# Prompts
-
-Aquí van **todos los prompts que lanzaste** para hacer el ejercicio, en el orden en que los
-lanzaste, con el modelo y la herramienta de cada uno.
-
-Esto no es papeleo. Lo que se revisa es **cómo pediste las cosas**, no solo lo que salió: un
-resultado flojo con un prompt bueno y un resultado flojo con un prompt vago necesitan feedback
-distinto, y sin este archivo no se distinguen.
-
-## Cómo rellenarlo
-
-- Un apartado `## Prompt N` por cada prompt.
-- **Pega el prompt tal cual lo lanzaste**, dentro del bloque de código, aunque ocupe diez líneas
-  y aunque tenga faltas. No lo reescribas para que quede bien: el que arreglaste mentalmente
-  después no es el que lanzaste.
-- Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
-- `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
-
-Borra el ejemplo de abajo cuando escribas el primero.
-
----
-
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Opus 5.5 (claude-opus-5-5)
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
-
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+revisa si los tests del proyecto cubren de verdad el req
+uisito  openspec/specs/tasks/spec.md «Lo que cada tarea
+muestra de su responsable»
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** revisó sus propios tests y encontró que c
+ubren menos de lo que pide el requisito.
+
+## Prompt 2
+
+**Modelo:** Opus 5.5 (claude-opus-5-5)
+**Herramienta:** Claude Code
+
+```
+genera una matriz de trazabilidad
+  - Arriba, dos números: scenarios totales y cuántos están cubiertos.
+  - Una fila por scenario, con cuatro columnas:
+    - el scenario en una línea;
+    - el nombre exacto del test que lo cubre;
+    - Cubierto / No cubierto / No lo sé;
+    - si pusiste "No lo sé", qué te faltó para decidirlo.
+  - Para marcar "Cubierto" tienes que abrir el test y leer qué comprueba. Que el nombre se parezca no basta.
+```
+
+**Qué salió:** Añadió a docs/verificacion/ap.md una matriz, hecha contra la suite actual (0 cubiertos)
+
+## Prompt 3
+
+**Modelo:** Opus 5.5 (claude-opus-5-5)
+**Herramienta:** Claude Code
+
+```
+
+Por cada fila en No cubierto, escribe el test que falta — uno por scenario — siguiendo el estilo de los que ya existen en el proyecto. Sin tocar nada fuera de la carpeta de tests. Cuando los tengas, ejecútalos.
+```
+
+**Qué salió:** Escribió los tres tests en backend/tests/functional/tasks/assignee.spec.ts, uno por scenario.
+
+## Prompt 4
+
+**Modelo:** Opus 5.5 (claude-opus-5-5)
+**Herramienta:** Claude Code
+
+```
+tasks/*
+```
+
+**Qué salió:** ejecutó: 2 en verde y 1 en rojo
+
+- ✅ el responsable llega con su nombre y sus iniciales
+- ✅ un responsable sin nombre llega con nombre nulo y con iniciales
+- ❌ ni la tarea suelta ni la lista exponen el email del responsable: en la lista, el assignee trae email (assignee.spec.ts:77).
+
+Si quieres lanzarlas tú y que la salida aparezca aquí en el chat, escribe en el prompt:
+
+! cd backend; node ace test --files="tasks/*"
+
+Ojo: tasks/* solo no es un comando. Es el valor de la opción --files, así que tiene que ir detrás de node ace test..
