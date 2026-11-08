@@ -33,24 +33,11 @@ Crea una matriz de trazabilidad con una tabla que cuente con las siguientes colu
 No basta con revisar los nombres de los test, es necesarios revisarlos para estar seguro de que cubren. No modifiques nada del proyecto todavia.
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+
 
 ---
 
 ## Prompt 2
-
-**Modelo:** Sonnet 5.5
-**Herramienta:** Claude Code
-
-```
-ayudame a rellenar el fichero @prompts.md . Reinicialo y siguiendo el patrón escribe el siguiente prompt lanzado con Sonnet 5.5
-```
-
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
-
----
-
-## Prompt 3
 
 **Modelo:** Sonnet 5.5
 **Herramienta:** Claude Code
@@ -75,4 +62,4 @@ No cambies el test para forzar que pase.
 Después ejecuta los tests y dime cuáles pasan y cuáles fallan.
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+
