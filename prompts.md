@@ -22,14 +22,44 @@ Borra el ejemplo de abajo cuando escribas el primero.
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Sonnet 5.5
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
+Necesito que revises la documentación del proyecto para entender el alcance general. Me encuentro en fase de revision de la implementación de la spec "Lo que cada tarea muestra de su responsable".
+Por ello necesito revisar de forma exhaustiva si los escenarios de este requisito se encuentran bien cubiertos por los test unitarios existentes en el proyecto. Solo me interesa esta spec.
+Crea una matriz de trazabilidad con una tabla que cuente con las siguientes columnas: - nombre del escenario - nombre del test que lo cubre - estado del escenario (cubierto/no cubierto/no lo se) -Que te faltó (motivo de por que no lo sabes)
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+No basta con revisar los nombres de los test, es necesarios revisarlos para estar seguro de que cubren. No modifiques nada del proyecto todavia.
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+
+
+---
+
+## Prompt 2
+
+**Modelo:** Sonnet 5.5
+**Herramienta:** Claude Code
+
+```
+De la matriz anterior, trabaja únicamente con los scenarios marcados como «No cubierto».
+
+Por cada scenario:
+
+Escribe un único test que compruebe ese comportamiento.
+
+Sigue el estilo existente en backend/tests/functional/auth/.
+
+Guarda los nuevos tests dentro de backend/tests/functional/tasks/.
+
+No modifiques ningún archivo fuera de backend/tests/.
+
+No modifiques el código de producción aunque el test falle.
+
+No cambies el test para forzar que pase.
+
+Después ejecuta los tests y dime cuáles pasan y cuáles fallan.
+```
+
+
