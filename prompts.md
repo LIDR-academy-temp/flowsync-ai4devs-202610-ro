@@ -26,6 +26,23 @@ Borra el ejemplo de abajo cuando escribas el primero.
 **Herramienta:** Claude Code
 
 ```
+Necesito que revises la documentación del proyecto para entender el alcance general. Me encuentro en fase de revision de la implementación de la spec "Lo que cada tarea muestra de su responsable".
+Por ello necesito revisar de forma exhaustiva si los escenarios de este requisito se encuentran bien cubiertos por los test unitarios existentes en el proyecto. Solo me interesa esta spec.
+Crea una matriz de trazabilidad con una tabla que cuente con las siguientes columnas: - nombre del escenario - nombre del test que lo cubre - estado del escenario (cubierto/no cubierto/no lo se) -Que te faltó (motivo de por que no lo sabes)
+
+No basta con revisar los nombres de los test, es necesarios revisarlos para estar seguro de que cubren. No modifiques nada del proyecto todavia.
+```
+
+**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+
+---
+
+## Prompt 2
+
+**Modelo:** Sonnet 5.5
+**Herramienta:** Claude Code
+
+```
 ayudame a rellenar el fichero @prompts.md . Reinicialo y siguiendo el patrón escribe el siguiente prompt lanzado con Sonnet 5.5
 ```
 
