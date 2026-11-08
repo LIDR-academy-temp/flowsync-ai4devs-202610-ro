@@ -47,3 +47,32 @@ ayudame a rellenar el fichero @prompts.md . Reinicialo y siguiendo el patrón es
 ```
 
 **Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+
+---
+
+## Prompt 3
+
+**Modelo:** Sonnet 5.5
+**Herramienta:** Claude Code
+
+```
+De la matriz anterior, trabaja únicamente con los scenarios marcados como «No cubierto».
+
+Por cada scenario:
+
+Escribe un único test que compruebe ese comportamiento.
+
+Sigue el estilo existente en backend/tests/functional/auth/.
+
+Guarda los nuevos tests dentro de backend/tests/functional/tasks/.
+
+No modifiques ningún archivo fuera de backend/tests/.
+
+No modifiques el código de producción aunque el test falle.
+
+No cambies el test para forzar que pase.
+
+Después ejecuta los tests y dime cuáles pasan y cuáles fallan.
+```
+
+**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
