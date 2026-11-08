@@ -118,3 +118,25 @@ hasme una estimacio privia
 ```
 
 **Qué salió:** cambió la línea 1 por la estimación del agente indicando su origen, e hizo commit y push.
+
+## Prompt 10
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (app de escritorio)
+
+```
+respeta ese lemite y entregalo despues
+```
+
+**Qué salió:** explicó que el límite de 45 minutos no se puede respetar a posteriori sin falsear el resultado, y propuso declararlo en la matriz.
+
+## Prompt 11
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (app de escritorio)
+
+```
+mera y modefica algo si ha comlido el tiempo
+```
+
+**Qué salió:** comprobó que seguía dentro de plazo, añadió a `docs/verificacion/na.md` la nota de que no se respetó el límite, e hizo commit y push.

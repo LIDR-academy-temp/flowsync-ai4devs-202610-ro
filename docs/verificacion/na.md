@@ -10,6 +10,8 @@
 
 Las pruebas están en `backend/tests/functional/tasks/assignee.spec.ts` y miran todas las respuestas que traen una tarea: lista, tarea suelta, creación, cambio de estado y cambio de fecha. Suite al terminar: 23 tests, 21 en verde y 2 en rojo. Los rojos son del código y no se han tocado.
 
+**Límite de 45 minutos no respetado.** Dentro del reloj quedó la primera versión: matriz de 4 filas y 3 tests (2 verdes, 1 rojo). Después, fuera del reloj: revisión adversarial y segunda versión (formato del README, lista blanca de claves, todas las respuestas que traen una tarea; resultado 1 verde y 2 rojos).
+
 ## Las tres líneas
 
 1. **Antes de mirar: 2 de 3 (estimación del agente antes de abrir ningún test; yo no escribí número). Cubiertos: 0 de 3.**
