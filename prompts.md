@@ -85,3 +85,36 @@ recopera y ejecuta todo
 ```
 
 **Qué salió:** volvió a pasar la suite (21 verdes, 2 rojos), hizo el commit y el push de la rama `trazabilidad-na` a mi fork.
+
+## Prompt 7
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (app de escritorio)
+
+```
+has todo el ejercecio
+```
+
+**Qué salió:** comprobó que todo estaba hecho salvo el PR, que tengo que abrir yo, y la línea 1 sin estimación previa.
+
+## Prompt 8
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (app de escritorio)
+
+```
+hasme una estimacio privia
+```
+
+**Qué salió:** se negó a inventarla, porque ya conocía el resultado. Propuso usar la estimación real que hizo el agente antes de abrir los tests (2 de 3), diciendo quién la hizo.
+
+## Prompt 9
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code (app de escritorio)
+
+```
+¿Cambio la línea 1 por la opción 1 y hago commit y push? El PR lo tendrías que seguir abriendo tú.
+```
+
+**Qué salió:** cambió la línea 1 por la estimación del agente indicando su origen, e hizo commit y push.

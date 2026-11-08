@@ -12,6 +12,6 @@ Las pruebas están en `backend/tests/functional/tasks/assignee.spec.ts` y miran 
 
 ## Las tres líneas
 
-1. **Antes de mirar: no escribí número antes del primer prompt. Cubiertos: 0 de 3.**
+1. **Antes de mirar: 2 de 3 (estimación del agente antes de abrir ningún test; yo no escribí número). Cubiertos: 0 de 3.**
 2. **«La tarea no filtra datos de cuenta»:** no sé si el email en la lista es un hueco de test o de spec, porque otro requisito obliga a que la lista devuelva «exactamente los mismos datos por tarea que antes de existir el vencimiento», y antes ya traía el email.
 3. **Decidí que «sus iniciales siguen llegando» es una o dos mayúsculas, sin fijar cuáles:** sin nombre, el sistema las saca del email («RE» para `responsable@example.com`), y el scenario no dice si eso ya es «recurrir a su email».
