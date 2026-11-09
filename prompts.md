@@ -356,3 +356,32 @@ He añadido los 3 puntos en una sección «Reflexión» debajo del resumen de `d
 3. **Lo que tuve que decidir:** qué campos puede llevar el `assignee`. Fijé `id`, `fullName` e `initials`, tomados del código y del diseño archivado, no de la spec. Leído al pie de la letra, el requisito no permite el `id`. También decidí probar los 5 endpoints que devuelven tareas.
 
 Los he escrito en primera persona, desde lo que hice yo en esta sesión. Si quieres que reflejen tu experiencia, cámbialos o dime qué poner.
+
+---
+
+## Prompt 11
+
+**Modelo:** claude-opus-5-5
+**Herramienta:** Claude Code
+
+```
+- En la matriz de trazabilidad quiero que consideres como Cubierto si existe un test que cubre el escenario. Cambia el significado de los iconos. Si el test ha fallado al ejecutar pon el aspa. Si ha funcionado por el check verde
+```
+
+**Respuesta:**
+
+He cambiado el significado del estado en `docs/verificacion/ims.md`. Ahora el texto dice si hay un test que cubre el scenario, y el icono dice si ese test pasó o falló al ejecutarlo.
+
+| Scenario | Estado |
+|---|---|
+| Responsable identificable | ✅ Cubierto |
+| La tarea no filtra datos de cuenta | ❌ Cubierto |
+| Responsable sin nombre | ❌ Cubierto |
+
+Para que el documento cuadre con el nuevo criterio, he cambiado también:
+- **Leyenda:** explica el nuevo significado. Un scenario sin test no lleva icono.
+- **Línea de arriba de la tabla:** ahora dice «Scenarios en el requisito: 3 - Cubiertos: 3».
+- **Resumen:** separa la cobertura (3 de 3) del resultado de los tests (1 pasa, 2 fallan).
+- **Reflexión, punto 1:** ahora dice que los 3 están cubiertos pero solo 1 test pasa.
+
+«No lo sé» sigue en la leyenda como tercer estado posible, aunque ahora no lo usa ninguna fila. En «Qué te faltó» se mantiene que los dos tests fallan porque el código expone el email, no porque falte un test.
