@@ -22,14 +22,32 @@ Borra el ejemplo de abajo cuando escribas el primero.
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Opus 5.5 medium
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
+Ayudame a trabajar el requisito "Lo que cada tarea muestra de su responsable"
+El objetivo es realizar una matriz de trazabilidad si el requisito esta cubierto por los tests
+El formato es el siguiente:
+cuántos scenarios en el requisito: (numero) - Cubiertos (numero)
 
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+ Crea una fila por cada scenario con cuatro columnas. 
+La primer columna con el scenario, la segunda el test que cubre (con el nombre que aparece en la suite), la tercera si esta cubierto, no lo esta o no lo sé y la cuarta si pusiste "no lo sé", que te faltó para decidirlo
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** 
+Guardé la matriz en docs/verificacion/js.md. El enunciado pide que vaya en un archivo del repo, no en el chat. Usé js como iniciales; renómbralo si usas otras.
+
+
+
+## Prompt 2
+
+**Modelo:** Opus 5.5 medium
+**Herramienta:** Claude Code
+
+```
+Escribe los tests por cada uno de los scenarios en backend/tests/functional/tasks/ y ejecutarlos, si alguno sale en rojo se entrega en rojo, sin tocar el código.
+```
+
+**Qué salió:** 
+Generó los test faltantes y los casos que pasaron y los que fallaron al ejecutarse
