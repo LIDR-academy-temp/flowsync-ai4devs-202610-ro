@@ -6,9 +6,10 @@ import testUtils from '@adonisjs/core/services/test_utils'
 
 /**
  * Lo que una tarea enseña de su responsable. Cubre los scenarios «Responsable
- * identificable» y «La tarea no filtra datos de cuenta» del requisito «Lo que
- * cada tarea muestra de su responsable» de `openspec/specs/tasks/spec.md`, en
- * las dos lecturas que devuelven tareas: la tarea suelta y la lista.
+ * identificable», «La tarea no filtra datos de cuenta» y «Responsable sin
+ * nombre» del requisito «Lo que cada tarea muestra de su responsable» de
+ * `openspec/specs/tasks/spec.md`, en las dos lecturas que devuelven tareas: la
+ * tarea suelta y la lista.
  */
 test.group('Task | responsable', (group) => {
   group.each.setup(() => testUtils.db().withGlobalTransaction())
@@ -121,5 +122,65 @@ test.group('Task | responsable', (group) => {
     const enLista = (response.body().data as any[]).find(({ id }) => id === tarea.id)
     assert.isDefined(enLista)
     assertSinDatosDeCuenta(assert, enLista.assignee)
+  })
+
+  /**
+   * Scenario «Responsable sin nombre»: una tarea de una cuenta registrada sin
+   * nombre, consultada por otra cuenta.
+   */
+  async function tareaSinNombre(client: any) {
+    const sinNombre = await User.create({
+      fullName: null,
+      email: 'sin-nombre@example.com',
+      password: 'secreto123',
+    })
+    await User.create({
+      fullName: 'Alan Turing',
+      email: 'alan@example.com',
+      password: 'secreto123',
+    })
+    const tarea = await Task.create({
+      title: 'Revisar el informe',
+      status: 'pending',
+      assigneeId: sinNombre.id,
+    })
+
+    const login = await client
+      .post('/api/v1/auth/login')
+      .json({ email: 'alan@example.com', password: 'secreto123' })
+
+    return { tarea, token: login.body().data.token as string }
+  }
+
+  test('una tarea suelta de un responsable sin nombre trae el nombre nulo y las iniciales', async ({
+    client,
+    assert,
+  }) => {
+    const { tarea, token } = await tareaSinNombre(client)
+
+    const response = await client
+      .get(`/api/v1/tasks/${tarea.id}`)
+      .qs({ today: '2026-08-13' })
+      .header('Authorization', `Bearer ${token}`)
+
+    response.assertStatus(200)
+    assert.isNull(response.body().data.assignee.fullName)
+    assert.equal(response.body().data.assignee.initials, 'SE')
+  })
+
+  test('una tarea de la lista de un responsable sin nombre trae el nombre nulo y las iniciales', async ({
+    client,
+    assert,
+  }) => {
+    const { tarea, token } = await tareaSinNombre(client)
+
+    const response = await client.get('/api/v1/tasks').header('Authorization', `Bearer ${token}`)
+
+    response.assertStatus(200)
+
+    const enLista = (response.body().data as any[]).find(({ id }) => id === tarea.id)
+    assert.isDefined(enLista)
+    assert.isNull(enLista.assignee.fullName)
+    assert.equal(enLista.assignee.initials, 'SE')
   })
 })
