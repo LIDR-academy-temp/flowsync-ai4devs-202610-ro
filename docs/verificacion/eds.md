@@ -3,7 +3,19 @@
 **Scenarios del requisito: 3**
 **Cubiertos antes: 0** · **Cubiertos después: 3** (2 en verde, 1 en rojo)
 
-Requisito de `openspec/specs/tasks/spec.md`. La tabla recoge el estado de la suite **antes** de los tests nuevos; el resultado después va debajo.
+Requisito de `openspec/specs/tasks/spec.md`.
+
+### Después de los tests nuevos
+
+Contar la fila 2 como cubierta aunque esté en rojo es deliberado: el test existe y detecta el incumplimiento. Lo que está mal es el código, no la cobertura.
+
+| Scenario | Prueba que lo cubre | Estado | Qué faltó |
+|---|---|---|---|
+| Tarea con responsable "Ada Lovelace" → su `assignee` trae nombre e iniciales | `assignee.spec.ts` › `Tasks \| responsable` › `el responsable llega con su nombre y sus iniciales` | Cubierto · verde | |
+| Cualquier tarea, suelta o en la lista → su `assignee` no trae email ni datos de acceso | `assignee.spec.ts` › `Tasks \| responsable` › `el responsable de una tarea no trae su email ni datos de acceso` | Cubierto · **rojo** | El código: `GET /tasks`, `POST /tasks` y `PATCH /tasks/:id/status` exponen el email |
+| Responsable registrado sin nombre → `assignee.fullName` nulo y las iniciales siguen llegando | `assignee.spec.ts` › `Tasks \| responsable` › `un responsable sin nombre llega con nombre nulo y con iniciales` | Cubierto · verde | |
+
+### Antes de los tests nuevos
 
 | Scenario | Prueba que lo cubre | Estado | Qué faltó |
 |---|---|---|---|
@@ -20,8 +32,8 @@ Criterio: en `backend/tests/` solo hay tests de auth y ninguno pide una tarea. `
 
 ## Parte B · Las tres líneas
 
-1. (pendiente: lo escribe el alumno)
-2. (pendiente: lo escribe el alumno)
+1. Cuántos scenarios creías cubiertos antes de mirar, y cuántos lo estaban: Creia que no había ninguno, pero estaban los 22
+2. El scenario del que no supiste si era un hueco de test o un hueco de spec: El escenario "el responsable de una tarea no trae su email ni datos de acceso" porque al preguntar por el test, es el que me sale.
 3. (pendiente: lo escribe el alumno)
 
 ### Decisiones que tomó el agente al escribir los tests
