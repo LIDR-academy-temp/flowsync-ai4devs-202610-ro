@@ -22,14 +22,37 @@ Borra el ejemplo de abajo cuando escribas el primero.
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
+**Modelo:** Opus 5.5
 **Herramienta:** Claude Code
 
 ```
-Este es el ejemplo. Bórralo.
-
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+Busca en backend/tests/ todos los tests que tocan el responsable (assignee) de una tarea y que, por cada uno, dame su nombre exacto y qué afirma literalmente (las líneas del assert). Prohíbele decidir la cobertura, escribir tests y hacer commits.
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** lanzó un subagente Explore de solo lectura. Resultado: no existe ningún test de tareas, solo de auth. El assignee solo aparece en el modelo de la aplicación. Prompt redactado con ayuda de Claude (chat).
+
+## Prompt 2
+
+**Modelo:** Opus 5.5
+**Herramienta:** Claude Code
+
+```
+No hagas commits, push ni PRs hasta que yo te lo pida.
+
+Escribe 3 tests funcionales nuevos, uno por scenario del requisito «Lo que cada tarea muestra de su responsable» de openspec/specs/tasks/spec.md:
+1. Responsable identificable: la tarea trae el nombre y las iniciales del responsable.
+2. La tarea no filtra datos de cuenta: el assignee no incluye el email ni datos de acceso, comprobándolo tanto en una tarea suelta (GET /api/v1/tasks/:id) como dentro de la lista (GET /api/v1/tasks).
+3. Responsable sin nombre: con una cuenta registrada sin nombre, el nombre del assignee llega nulo y las iniciales sí llegan.
+
+Reglas:
+- Ponlos en backend/tests/functional/tasks/ siguiendo el estilo de los tests de backend/tests/functional/auth/ (nombres en castellano, misma forma de crear cuentas y tokens).
+- No toques nada fuera de backend/tests/.
+- Usa como nombre de cada test una frase que describa el scenario.
+- Ejecuta la suite al terminar.
+- Si algún test falla, NO arregles el código de la aplicación ni ajustes el test para que pase: déjalo en rojo y explícame por qué falla.
+```
+
+**Qué salió:** escribió 3 tests; 2 verdes y 1 rojo (la lista expone el email del responsable). Sin pedirlo, creó una rama feat/tests-responsable-tareas por indicación de CLAUDE.md; volví a mi rama a mano. Avisó de que POST /api/v1/tasks probablemente tenga la misma fuga, pero no lo probó. Prompt redactado con ayuda de Claude (chat).
+
+
+
