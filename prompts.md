@@ -22,14 +22,11 @@ Borra el ejemplo de abajo cuando escribas el primero.
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
-**Herramienta:** Claude Code
+**Modelo:** Sonnect 5.5 Medium
+**Herramienta:** Claude
 
 ```
-Este es el ejemplo. Bórralo.
-
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+In the CLAUDE.md file, read the section "Reglas de proceso"  and contrast those rules over the last 15 commits of the repository and the current tree state. Write them in the file docs/auditoria/av.md.
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** Funcionó pero no estoy seguro que el historial que Claude leyó era el que esta ejercicio tenía en mente. Leyó el historial pero del repositiorio remoto y en realidad me pareció que fue bueno. Sin embargo si es necesario aclarar en las instrucciones cual era el repositorio target.
