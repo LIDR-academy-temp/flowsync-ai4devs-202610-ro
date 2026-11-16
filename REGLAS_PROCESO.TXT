@@ -1,0 +1,5 @@
+1. Los cambios en la base de datos deben ir acompañados del script SQL correspondiente. CASI NUNCA
+
+2. Antes de entregar cualquier modificación, hay que comprobar que funciona y que no afecta a las funcionalidades existentes. CASI SIEMPRE
+
+3. Hay que mantener la compatibilidad con las versiones anteriores del software. SIEMPRE
