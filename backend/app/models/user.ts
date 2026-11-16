@@ -8,11 +8,31 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   static accessTokens = DbAccessTokensProvider.forModel(User)
   declare currentAccessToken?: AccessToken
 
+  /**
+   * El nombre de la cuenta sin espacios de los extremos, o `null` si no tiene:
+   * un nombre vacío o de solo espacios es no tener nombre, igual que `null`.
+   */
+  get displayName(): string | null {
+    const nombre = this.fullName?.trim()
+    return nombre || null
+  }
+
+  /**
+   * Las palabras del nombre son los trozos separados por espacios, sean cuantos
+   * sean; una cuenta sin nombre toma las iniciales de su email.
+   *
+   * Se cuentan caracteres y no unidades UTF-16: `charAt` y `slice` parten un
+   * emoji por la mitad y dejan una cadena que ni siquiera es texto válido.
+   */
   get initials() {
-    const [first, last] = this.fullName ? this.fullName.split(' ') : this.email.split('@')
+    const nombre = this.displayName
+    const [first, last] = nombre ? nombre.split(/\s+/) : this.email.split('@')
+    const primeros = (texto: string, cuantos: number) =>
+      Array.from(texto).slice(0, cuantos).join('')
+
     if (first && last) {
-      return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase()
+      return `${primeros(first, 1)}${primeros(last, 1)}`.toUpperCase()
     }
-    return `${first.slice(0, 2)}`.toUpperCase()
+    return primeros(first, 2).toUpperCase()
   }
 }
